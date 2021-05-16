@@ -18,6 +18,7 @@ import ComponentLoading from '../../Components/Loading/index'
 import IMAGES from '../../Constant/Images/index'
 import ModalSearch from '../../Components/Modal/ModalSearch/index'
 import {Picker} from '@react-native-picker/picker';
+import ButtonBack from '../../Components/Details/ButtonBack/index'
 
 class ScreenSearchResult extends Component {
 
@@ -70,6 +71,9 @@ class ScreenSearchResult extends Component {
 
                 {/* SEARCH */}
                 <View style={[style.wrapSearch]}>
+                    <View style={{ marginRight : _widthScale(10) }}>
+                        <ButtonBack goBack={() => this.props.navigation.goBack()} />
+                    </View>
                     <TouchableOpacity
                         activeOpacity={0.7}
                         onPress={() => this.__openModalSearch()}

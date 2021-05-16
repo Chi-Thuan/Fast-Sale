@@ -54,7 +54,6 @@ class Account extends Component {
                     <Text style={style.title}>
                         Cá nhân
                     </Text>
-                    <ButtonCart goToPageCart={this.props.navigation} />
                 </View>
                 
                 {

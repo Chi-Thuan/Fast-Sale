@@ -15,6 +15,7 @@ import Search from '../../Components/Category/Search/index'
 import ProductItem from '../../Components/Global/ProductItem/index'
 import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
 import ComponentLoading from '../../Components/Loading/index'
+import ButtonBack from '../../Components/Details/ButtonBack/index'
 
 class ProductsOfCategory extends Component {
 
@@ -85,6 +86,9 @@ class ProductsOfCategory extends Component {
 
                 {/* SEARCH */}
                 <View style={[style.wrapSearch]}>
+                    <View style={{ marginRight : _widthScale(10) }}>
+                        <ButtonBack goBack={() => this.props.navigation.goBack()} />
+                    </View>
                     <Search navigation={this.props.navigation} />
                 </View>
 

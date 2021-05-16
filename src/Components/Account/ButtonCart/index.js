@@ -13,10 +13,13 @@ import * as ScreenKey from '../../../Constant/ScreenKey'
 
 class ButtonCart extends Component {
     render() {
+
+        const { navigation } = this.props
+
         return (
             <TouchableOpacity
             activeOpacity={0.6}
-            onPress={ ()=> this.props.goToPageCart.navigate(ScreenKey.CART) }
+            onPress={ ()=> navigation.navigate(ScreenKey.SCREEN_TAB_BOTTOM, { screen : ScreenKey.CART }) }
             >
             <View style={[style.container]}>
                 <Image
