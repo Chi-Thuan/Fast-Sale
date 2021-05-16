@@ -15,27 +15,29 @@ import * as COLOR from '../../../Constant/Color/index'
 import { formatCurrencyVND } from '../../../Utils/utils'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 import * as ScreenKey from '../../../Constant/ScreenKey'
+import { likeProduct } from '../../../Services/api'
 
 class ButtonBack extends Component {
 
     constructor(props){
         super();
         this.state = {
-            isFavorite : false
+            isLikeProduct : true
         }
     }
 
-    setFavorite = async () => {
+    _handleLikeProduct = async () => {
 
         const { navigation, item } = this.props
-
         const UserLogin = await AsyncStorage.getItem('userLogin')
         if(UserLogin != null) {
-            // this.setState({
-            //     isLogin : true,
-            //     userLogin : JSON.parse(UserLogin)
-            // })
-            alert('yeu thich')
+            const result = await likeProduct(item._id)
+            if(!result.result) {
+                this.setState({ isLikeProduct: !this.state.isLikeProduct })
+                alert('Đã thêm vào danh sách yêu thích')
+            }else{
+                alert(result.message)
+            }
         }else{
             Alert.alert("Thông báo", "Bạn phải đăng nhập để sử dụng tính năng này!", [
                 { text : "Hủy" },
@@ -44,11 +46,17 @@ class ButtonBack extends Component {
                 }}
             ])
         }
-        // this.setState({ isFavorite: !this.state.isFavorite })
+    }
+
+    
+
+    _handleDisLikeProduct = async () => {
+        alert('xoa khoi danh')
     }
 
     render(){
-
+        
+        const { isLikeProduct } = this.state
         const { item } = this.props
         
         return (
@@ -71,9 +79,9 @@ class ButtonBack extends Component {
 
                         <TouchableWithoutFeedback
                             activeOpacity={0.7}
-                            onPress={this.setFavorite}
+                            onPress={isLikeProduct ? this._handleDisLikeProduct : this._handleLikeProduct}
                         >
-                            <View style={[style.wrapBtnFavorite, this.state.isFavorite == false ? style.btnFavorite_Normal : style.btnFavorite_Active]}>
+                            <View style={[style.wrapBtnFavorite, isLikeProduct == false ? style.btnFavorite_Normal : style.btnFavorite_Active]}>
                                 <Image 
                                     style={[style.btnFavorite]}
                                     source={IMAGES.ICON_FAVORITE}

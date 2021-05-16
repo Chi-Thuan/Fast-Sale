@@ -22,7 +22,6 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import { registerAccount } from '../../Services/api'
-import GlobalStore from '../../Constant/GlobalStore'
 
 
 class ScreenRegister extends Component {
@@ -63,7 +62,6 @@ class ScreenRegister extends Component {
                 if(!result.error) {
                     const { infoUser } = result
                     await AsyncStorage.setItem('userLogin', JSON.stringify(infoUser))
-                    GlobalStore.token= infoUser.token
                     Alert.alert(
                         "Thông báo",
                         "Tạo tài khoản thành công!",

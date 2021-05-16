@@ -13,7 +13,6 @@ import ButtonYeuThich from '../../Components/Cart/ButtonYeuThich/index'
 import BodyDetails from '../../Components/Details/BodyDetails/index'
 import { getProductById } from '../../Services/api'
 import { formatCurrencyVND } from '../../Utils/utils'
-import GlobalStore from '../../Constant/GlobalStore'
 
 class Details extends Component {
 
@@ -28,7 +27,6 @@ class Details extends Component {
     async componentDidMount () {
         const { _id } = this.props.route.params
         const { error, data } = await getProductById(_id)
-        console.log('sssss  ',data)
         if(!error) {
             this.setState({ data : data, isLoading : false })
         }else{

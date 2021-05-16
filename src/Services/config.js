@@ -1,14 +1,16 @@
 import axios from 'axios'
 import { BASE_URL } from '../Constant/Constants'
-import GlobalStore from '../Constant/GlobalStore'
+import AsyncStorage  from '@react-native-async-storage/async-storage'
 
 export default async (endPoint, data = null, method = "get", headers={}) => {
 
-    let token = GlobalStore.token
-
-    if(token){
-        headers = {
-            token
+    const UserLogin = await AsyncStorage.getItem('userLogin')
+    if(UserLogin) {
+        let token_user = JSON.parse(UserLogin).token
+        if(token_user){
+            headers = {
+                token : token_user
+            }
         }
     }
 

@@ -37,3 +37,7 @@ export const registerAccount = data => {
 export const loginAccount = data => {
     return fetchApi('/api/user/auth/login', data, METHOD.POST)
 }
+
+export const likeProduct = _id => {
+    return fetchApi(`/api/user/like-product/${_id}`, {}, METHOD.GET)
+}
