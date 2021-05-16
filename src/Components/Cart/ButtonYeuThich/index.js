@@ -20,7 +20,7 @@ class ButtonYeuThich extends Component {
             <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={() => { 
-                    navigation.navigate(ScreenKey.CART_NAVIGATOR, { screen : ScreenKey.FAVORITE })
+                    navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.FAVORITE })
                 }}
                 >
                 <View style={[style.container]}>

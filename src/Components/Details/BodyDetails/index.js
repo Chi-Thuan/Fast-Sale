@@ -5,13 +5,16 @@ import {
     StyleSheet, 
     Image, 
     ScrollView,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Alert
 } from 'react-native'
 import { _heightScale, _widthScale, BASE_URL } from '../../../Constant/Constants'
 
 import IMAGES from '../../../Constant/Images/index'
 import * as COLOR from '../../../Constant/Color/index'
 import { formatCurrencyVND } from '../../../Utils/utils'
+import AsyncStorage  from '@react-native-async-storage/async-storage'
+import * as ScreenKey from '../../../Constant/ScreenKey'
 
 class ButtonBack extends Component {
 
@@ -22,8 +25,26 @@ class ButtonBack extends Component {
         }
     }
 
-    setFavorite = () => {
-        this.setState({ isFavorite: !this.state.isFavorite })
+    setFavorite = async () => {
+
+        const { navigation, item } = this.props
+
+        const UserLogin = await AsyncStorage.getItem('userLogin')
+        if(UserLogin != null) {
+            // this.setState({
+            //     isLogin : true,
+            //     userLogin : JSON.parse(UserLogin)
+            // })
+            alert('yeu thich')
+        }else{
+            Alert.alert("Thông báo", "Bạn phải đăng nhập để sử dụng tính năng này!", [
+                { text : "Hủy" },
+                { text : 'Đăng nhập',  onPress : () => {
+                    navigation.replace(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN})  
+                }}
+            ])
+        }
+        // this.setState({ isFavorite: !this.state.isFavorite })
     }
 
     render(){
@@ -31,7 +52,9 @@ class ButtonBack extends Component {
         const { item } = this.props
         
         return (
-            <ScrollView>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                >
                <View style={[style.boxContainer]}>
                     {/* ẢNH ĐẠI DIỆN */}
                     <View style={[style.wrapAvatar]}>
@@ -44,7 +67,6 @@ class ButtonBack extends Component {
                     <View style={[style.wrapPrice]}>
                         <Text style={[style.txtPrice]}>
                             { formatCurrencyVND(item.price) }
-                            
                         </Text>
 
                         <TouchableWithoutFeedback

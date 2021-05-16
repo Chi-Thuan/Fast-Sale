@@ -8,6 +8,7 @@ import { _heightScale } from '../../../Constant/Constants'
 
 import ButtonLogin from '../ButtonLogin/index'
 import OptionItem from '../OptionItem/index'
+import * as ScreenKey from '../../../Constant/ScreenKey'
 
 class ScreenNotLogin extends Component {
     render() {

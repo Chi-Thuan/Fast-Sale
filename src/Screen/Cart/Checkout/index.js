@@ -51,8 +51,6 @@ class ScreenCheckout extends Component {
         if(UserLogin != null) {
             this.setState({
                 userLogin : JSON.parse(UserLogin)
-            }, function() {
-                console.log('user login in checkout ', this.state.userLogin)
             })
         }
     }

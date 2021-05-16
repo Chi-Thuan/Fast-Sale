@@ -13,6 +13,7 @@ import ButtonYeuThich from '../../Components/Cart/ButtonYeuThich/index'
 import BodyDetails from '../../Components/Details/BodyDetails/index'
 import { getProductById } from '../../Services/api'
 import { formatCurrencyVND } from '../../Utils/utils'
+import GlobalStore from '../../Constant/GlobalStore'
 
 class Details extends Component {
 
@@ -25,9 +26,9 @@ class Details extends Component {
     }
 
     async componentDidMount () {
-       
         const { _id } = this.props.route.params
         const { error, data } = await getProductById(_id)
+        console.log('sssss  ',data)
         if(!error) {
             this.setState({ data : data, isLoading : false })
         }else{
@@ -36,6 +37,9 @@ class Details extends Component {
     }
 
     render() {
+
+        const { navigation } = this.props
+
         return(
             this.state.isLoading ?   
             <View style={{flex : 1, justifyContent : 'center',alignItems : 'center',backgroundColor : COLOR.WHITE}}>
@@ -49,10 +53,10 @@ class Details extends Component {
                     <Text style={[style.titleScreen]}>
                         Fast Sale
                     </Text>
-                    <ButtonYeuThich />
+                    {/* <ButtonYeuThich navigation={navigation} /> */}
                 </View>
                 {/* BODY DETAILS */}
-                <BodyDetails item = { this.state.data } />
+                <BodyDetails item= { this.state.data } navigation={navigation} />
                 {/* BUTTON MUA NGAY */}
                 <View>
                 </View>
@@ -74,13 +78,22 @@ const style = StyleSheet.create({
         backgroundColor : 'white',
         width : '100%',
         paddingHorizontal : _widthScale(18),
-        justifyContent : 'space-between',
-        alignItems : 'center'
+        justifyContent : 'flex-start',
+        alignItems : 'center',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     titleScreen : {
         fontSize : _heightScale(24),
         color : COLOR.MAIN_COLOR,
         fontWeight : 'bold',
+        marginLeft : _widthScale(20)
     }
 })
 

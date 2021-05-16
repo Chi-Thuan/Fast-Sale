@@ -17,6 +17,14 @@ class OptionItem extends Component {
 
         return (    
             <TouchableOpacity
+                onPress={() => {
+                    // console.log(data.navigation)
+                    // if(data.navigation != null){
+                    //     data.navigation()
+                    // }else{
+                        // alert('ocockso')
+                    // }
+                }}
                 activeOpacity={0.7}>
                 <View style={[style.container]}>
                     <View style={[style.wrapTitleOption]}>

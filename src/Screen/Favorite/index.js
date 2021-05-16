@@ -27,11 +27,14 @@ class Cart extends Component {
     }
 
     render() {
+
+        const { navigation } = this.props
+
         return(
             <View style={style.container}>
 
                 <View style={[style.wrapTitle]}>
-                    <ButtonBack goBack={() => this.props.navigation.goBack()} />
+                    <ButtonBack goBack={() => navigation.goBack()} />
                     <Text style={style.title}>
                             Danh sách yêu thích
                     </Text>
@@ -47,11 +50,15 @@ class Cart extends Component {
                                 Danh sách trống
                             </Text>
                         </View> */}
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
+                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
                     {/* { data.map((item, index) =>  <CartItem updateCart={updateCart} key={index} data={item} navigation={navigation} /> ) } */}
                 </ScrollView>
             </View> 

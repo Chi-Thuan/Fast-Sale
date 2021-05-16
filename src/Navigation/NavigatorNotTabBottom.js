@@ -9,6 +9,7 @@ import ScreenProfile from '../Screen/Profile/index'
 import ScreenSearch from '../Screen/Search/index'
 import ScreenSearchResult from '../Screen/SearchResult/index'
 import ProductsOfCategory from '../Screen/ProductsOfCategory/index'
+import Favorite from '../Screen/Favorite/index'
 
 const Stack = createStackNavigator()
 
@@ -33,6 +34,11 @@ const ScreenNotTabBottom = () => {
             <Stack.Screen name={ScreenKey.PROFILE} component={ScreenProfile} />
             <Stack.Screen name={ScreenKey.SEARCH} component={ScreenSearch} />
             <Stack.Screen name={ScreenKey.SEARCH_RESULT} component={ScreenSearchResult} />
+            <Stack.Screen name={ScreenKey.FAVORITE} component={Favorite} 
+                  options={{
+                    ...TransitionPresets.SlideFromRightIOS,
+                }} 
+                />
         </Stack.Navigator>
     )
 }

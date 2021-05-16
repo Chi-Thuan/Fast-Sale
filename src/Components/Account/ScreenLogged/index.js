@@ -26,6 +26,7 @@ class ScreenNotLogin extends Component {
                                 icon={item.icon}
                                 iconWidth={item.iconWidthICON}
                                 iconHeight={item.iconHeightICON}
+                                // navigation={item.navigation || false}
                                 lineBottom={ index != dataOptionNotLogin.length -1 || false  }
                             />
                         ))
@@ -55,35 +56,42 @@ const dataOptionNotLogin = [
         icon: 'https://img.icons8.com/ios/452/ingredients-list.png',
         iconWidthICON : _heightScale(25),
         iconHeightICON : _heightScale(25),
+        // navigation : false
     },
     {
         name : 'Sản phẩm đã mua',
         icon: 'https://icons-for-free.com/iconfiles/png/512/basket+buy+cart+shop+shopping+store+icon-1320073180063197567.png',
         iconWidthICON : _heightScale(25),
         iconHeightICON : _heightScale(25),
+        // navigation : false
     },
     {
         name : 'Sản phẩm đã xem',
         icon: 'https://pics.freeicons.io/uploads/icons/png/15475245161548336226-512.png',
         iconWidthICON : _heightScale(25),
         iconHeightICON : _heightScale(25),
+        // navigation : false
     },
     {
-        name : 'Sản phẩm yêu thích',
+        name : 'Danh sách yêu thích',
         icon: 'https://icons-for-free.com/iconfiles/png/512/heart-131965017458786724.png',
         iconWidthICON : _heightScale(25),
         iconHeightICON : _heightScale(25),
+        // navigation : navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.FAVORITE })
     },
     {
         name : 'Sản phẩm mua sau',
         icon: 'https://cdn2.iconfinder.com/data/icons/instagram-outline/19/9-512.png',
         iconWidthICON : _heightScale(25),
         iconHeightICON : _heightScale(25),
+        // navigation : false
     },
     {
         name : 'Ưu đãi cho chủ thẻ ngân hàng',
+        // navigation : false
     },
     {
         name : 'Cài đặt',
+        // navigation : false
     }
 ]

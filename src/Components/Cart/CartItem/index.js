@@ -85,6 +85,7 @@ class CartItem extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={0.7}
+                    onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : data._id } }) }}
                 >
                     <View style={[style.wrapAvatar]}>
                         <Image
@@ -95,7 +96,10 @@ class CartItem extends Component {
                 </TouchableOpacity>
 
                 <View style={[style.wrapInfoItem]}>
-                    <TouchableOpacity style={{ marginRight : _widthScale(30) }}>
+                    <TouchableOpacity style={{ marginRight : _widthScale(30) }}
+                            activeOpacity={0.7}
+                          onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : data._id } }) }}
+                        >
                         <Text 
                             style={[style.titleItem]}
                             numberOfLines={3}

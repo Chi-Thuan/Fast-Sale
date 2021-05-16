@@ -21,12 +21,13 @@ import ButtonYeuThich from '../../../Components/Cart/ButtonYeuThich/index'
 class CartItem extends Component {
 
     render() {
-        const { removeProduct } = this.props
+        const { removeProduct, navigation } = this.props
         return (
             <View style={[style.container]}>
 
                 <TouchableOpacity
                     activeOpacity={0.7}
+                    onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : '609b7b6851f089bd2142d4be' } }) }}
                 >
                     <View style={[style.wrapAvatar]}>
                         <Image
@@ -38,7 +39,10 @@ class CartItem extends Component {
                 </TouchableOpacity>
 
                 <View style={[style.wrapInfoItem]}>
-                    <TouchableOpacity style={{ marginRight : _widthScale(30) }}>
+                    <TouchableOpacity style={{ marginRight : _widthScale(30) }}
+                        activeOpacity={0.7}
+                         onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : '609b7b6851f089bd2142d4be' } }) }}
+                        >
                         <Text 
                             style={[style.titleItem]}
                             numberOfLines={3}
