@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "855836727440",
+    "project_id": "fast-sale-311308",
+    "storage_bucket": "fast-sale-311308.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855836727440:android:4a1ebce9840b72cfb3e015",
+        "android_client_info": {
+          "package_name": "com.fastsale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855836727440-71hatmqe8ai8u3pj0asj17snhsau9h1r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fastsale",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "855836727440-ljpncdfvki2p42ebde3fj3dt2fsvuncb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbmbEaAwVyCnZnc1VU4Mwn8_4yIltFSAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855836727440-ljpncdfvki2p42ebde3fj3dt2fsvuncb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
