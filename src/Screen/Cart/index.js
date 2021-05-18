@@ -140,7 +140,7 @@ class Cart extends Component {
                     listCart.length > 0 
                     ?
                     /* CÓ SẢN PHẨM */
-                    <ListCartItem totalPrice={priceTotal} updateCart={this._updateCart} data={listCart} navigateCheckout={this.__navigateCheckout} /> 
+                    <ListCartItem totalPrice={priceTotal} updateCart={this._updateCart} data={listCart} navigation={navigation} navigateCheckout={this.__navigateCheckout} /> 
                     :
                     /* KHÔNG CÓ SẢN PHẨM */
                     <ScrollView
