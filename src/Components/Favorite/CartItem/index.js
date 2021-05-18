@@ -21,19 +21,18 @@ import ButtonYeuThich from '../../../Components/Cart/ButtonYeuThich/index'
 class CartItem extends Component {
 
     render() {
-        const { removeProduct, navigation } = this.props
+        const { removeProduct, navigation, data } = this.props
         return (
             <View style={[style.container]}>
 
                 <TouchableOpacity
                     activeOpacity={0.7}
-                    onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : '609b7b6851f089bd2142d4be' } }) }}
+                    onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : data._id } }) }}
                 >
                     <View style={[style.wrapAvatar]}>
                         <Image
                             style={[style.avatar]}
-                            // source={{ uri : BASE_URL + data.thumbnail }}
-                            source={{ uri : 'https://salt.tikicdn.com/cache/w444/ts/product/68/23/2b/db905c71f7916d9fcb03b6f755935b17.jpg' }}
+                            source={{ uri : BASE_URL + data.thumbnail }}
                         />
                     </View>
                 </TouchableOpacity>
@@ -41,20 +40,19 @@ class CartItem extends Component {
                 <View style={[style.wrapInfoItem]}>
                     <TouchableOpacity style={{ marginRight : _widthScale(30) }}
                         activeOpacity={0.7}
-                         onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : '609b7b6851f089bd2142d4be' } }) }}
+                         onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : data._id } }) }}
                         >
                         <Text 
                             style={[style.titleItem]}
                             numberOfLines={3}
                         >  
-                            Macbook Pro 13 inch 2020 Quad Core I5 1.4Ghz 8GB 256GB (MXK32, MXK62) New 99%
-                            {/* { data.name } */}
+                            { data.name }
                         </Text>
                     </TouchableOpacity>
                     
                     <View style={[style.wrapInfoBottom]}>
                         <Text style={[style.txtPrice]}>
-                        { formatCurrencyVND(2000000) }
+                        { formatCurrencyVND(data.price) }
                         </Text>
                     </View>
                 </View>
@@ -62,7 +60,7 @@ class CartItem extends Component {
                 <TouchableWithoutFeedback
                             activeOpacity={0.7}
                             style={[style.wrapBtnDelete]}
-                            onPress={removeProduct}
+                            onPress={() => removeProduct(data._id)}
                         >
                             <View style={[style.wrapBtnFavorite, 
                                 ]}>

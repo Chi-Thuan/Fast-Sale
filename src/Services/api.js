@@ -49,3 +49,7 @@ export const dislikeProduct = _id => {
 export const checkIsLikeProduct = _id => {
     return fetchApi(`/api/user/check-product-is-like/${_id}`, {}, METHOD.GET)
 }
+
+export const getListFavoriteProduct = () => {
+    return fetchApi(`/api/user/get-all-favorite-product`, {}, METHOD.GET)
+}

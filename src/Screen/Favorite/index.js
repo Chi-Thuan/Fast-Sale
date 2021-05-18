@@ -4,7 +4,7 @@ import AsyncStorage  from '@react-native-async-storage/async-storage'
 
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
-import { getProductById } from '../../Services/api'
+import { dislikeProduct, getListFavoriteProduct } from '../../Services/api'
 import ButtonYeuThich from '../../Components/Cart/ButtonYeuThich/index'
 import EmptyCart from '../../Components/Cart/EmptyCart/index'
 import ProductOffer from '../../Components/Cart/ProductOffer/index'
@@ -17,17 +17,43 @@ import CartFavoriteItem from '../../Components/Favorite/CartItem/index'
 
 class Cart extends Component {
 
-    _removeProductFavorite = () => {
+    constructor(){
+        super()
+        this.state = {
+            listFavorite : []
+        }
+    }
+
+    async componentDidMount() {
+        const rs = await getListFavoriteProduct()
+        if(!rs.error) {
+            this.setState({ listFavorite : rs.data })
+        }
+    }
+
+    _removeProductFavorite = async _id => {
+
         Alert.alert("Thông báo", "Bạn có muốn xóa sản phẩm này ra khỏi danh sách yêu thích?", [
             { text : "Không" },
-            { text : 'Có',  onPress : () => {
-                alert('Xóa không thành công!')
+            { text : 'Có',  onPress : async () => {
+                const result = await dislikeProduct(_id)
+                if(!result.error) {
+                    alert('Đã xóa khỏi danh sách yêu thích!')
+                    // RELOAD
+                    const rs = await getListFavoriteProduct()
+                    if(!rs.error) {
+                        this.setState({ listFavorite : rs.data })
+                    }
+                }else{
+                    alert(result.message)
+                }
             }}
         ])
     }
 
     render() {
 
+        const { listFavorite } = this.state
         const { navigation } = this.props
 
         return(
@@ -45,21 +71,18 @@ class Cart extends Component {
                 <ScrollView 
                     showsVerticalScrollIndicator ={false}
                     style={[style.wrapListItem]}>
-                        {/* <View style={style.wrap_title_empty}>
-                            <Text style={[style.txt_empty]}>
-                                Danh sách trống
-                            </Text>
-                        </View> */}
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                        <CartFavoriteItem removeProduct={this._removeProductFavorite} navigation={navigation} />
-                    {/* { data.map((item, index) =>  <CartItem updateCart={updateCart} key={index} data={item} navigation={navigation} /> ) } */}
+                        {
+                            listFavorite.length > 0 ?
+                            listFavorite.map((item, index) =>
+                            <CartFavoriteItem key={index} data={item} removeProduct={this._removeProductFavorite} navigation={navigation} /> 
+                            )
+                            :
+                            <View style={style.wrap_title_empty}>
+                                <Text style={[style.txt_empty]}>
+                                    Danh sách trống
+                                </Text>
+                            </View>
+                        }
                 </ScrollView>
             </View> 
 
