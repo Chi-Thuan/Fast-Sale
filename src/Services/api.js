@@ -41,3 +41,7 @@ export const loginAccount = data => {
 export const likeProduct = _id => {
     return fetchApi(`/api/user/like-product/${_id}`, {}, METHOD.GET)
 }
+
+export const checkIsLikeProduct = _id => {
+    return fetchApi(`/api/user/check-product-is-like/${_id}`, {}, METHOD.GET)
+}

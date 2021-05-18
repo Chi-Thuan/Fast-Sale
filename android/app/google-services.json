@@ -22,7 +22,15 @@
           }
         },
         {
-          "client_id": "855836727440-ljpncdfvki2p42ebde3fj3dt2fsvuncb.apps.googleusercontent.com",
+          "client_id": "855836727440-lak18r02e2kf34dlrd4qnse9jnthncq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fastsale",
+            "certificate_hash": "ccf57755bafb84a04b179cb82aba6e63179f92b7"
+          }
+        },
+        {
+          "client_id": "855836727440-qq316o4javn93d3ee007p3vjuurvg56d.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

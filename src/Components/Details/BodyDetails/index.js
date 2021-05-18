@@ -16,13 +16,24 @@ import { formatCurrencyVND } from '../../../Utils/utils'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 import * as ScreenKey from '../../../Constant/ScreenKey'
 import { likeProduct } from '../../../Services/api'
+import { getProductById, checkIsLikeProduct } from '../../../Services/api'
 
 class ButtonBack extends Component {
 
     constructor(props){
         super();
         this.state = {
-            isLikeProduct : true
+            isLike : false
+        }
+    }
+
+    async componentDidMount() {
+        const { item } = this.props
+        const infoLike = await checkIsLikeProduct(item._id)  
+        if(!infoLike.error) {
+            this.setState({ isLike : true })
+        }else{
+            console.log('Lỗi không lấy được chi tiết sp : ',error)
         }
     }
 
@@ -33,7 +44,7 @@ class ButtonBack extends Component {
         if(UserLogin != null) {
             const result = await likeProduct(item._id)
             if(!result.result) {
-                this.setState({ isLikeProduct: !this.state.isLikeProduct })
+                this.setState({ isLike : true })
                 alert('Đã thêm vào danh sách yêu thích')
             }else{
                 alert(result.message)
@@ -56,7 +67,7 @@ class ButtonBack extends Component {
 
     render(){
         
-        const { isLikeProduct } = this.state
+        const { isLike } = this.state
         const { item } = this.props
         
         return (
@@ -79,9 +90,9 @@ class ButtonBack extends Component {
 
                         <TouchableWithoutFeedback
                             activeOpacity={0.7}
-                            onPress={isLikeProduct ? this._handleDisLikeProduct : this._handleLikeProduct}
+                            onPress={isLike ? this._handleDisLikeProduct : this._handleLikeProduct}
                         >
-                            <View style={[style.wrapBtnFavorite, isLikeProduct == false ? style.btnFavorite_Normal : style.btnFavorite_Active]}>
+                            <View style={[style.wrapBtnFavorite, isLike == false ? style.btnFavorite_Normal : style.btnFavorite_Active]}>
                                 <Image 
                                     style={[style.btnFavorite]}
                                     source={IMAGES.ICON_FAVORITE}

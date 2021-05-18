@@ -11,7 +11,7 @@ import * as COLOR from '../../Constant/Color/index'
 import ButtonBack from '../../Components/Details/ButtonBack/index'
 import ButtonYeuThich from '../../Components/Cart/ButtonYeuThich/index'
 import BodyDetails from '../../Components/Details/BodyDetails/index'
-import { getProductById } from '../../Services/api'
+import { getProductById, checkIsLikeProduct } from '../../Services/api'
 import { formatCurrencyVND } from '../../Utils/utils'
 
 class Details extends Component {
@@ -20,15 +20,21 @@ class Details extends Component {
         super()
         this.state = {
             isLoading : true,
-            data : {}
+            data : {},
+            isLike : false
         }
     }
 
     async componentDidMount () {
         const { _id } = this.props.route.params
         const { error, data } = await getProductById(_id)
+        // const infoLike = await checkIsLikeProduct(_id)  
         if(!error) {
             this.setState({ data : data, isLoading : false })
+            // if(!infoLike.error) {
+            //     console.log(infoLike)
+            //     this.setState({ isLike : true })
+            // }
         }else{
             console.log('Lỗi không lấy được chi tiết sp : ',error)
         }
@@ -36,10 +42,11 @@ class Details extends Component {
 
     render() {
 
+        const { isLoading, data } = this.state
         const { navigation } = this.props
 
         return(
-            this.state.isLoading ?   
+            isLoading ?   
             <View style={{flex : 1, justifyContent : 'center',alignItems : 'center',backgroundColor : COLOR.WHITE}}>
                 <ActivityIndicator size="large" color={COLOR.MAIN_COLOR} />
             </View >
@@ -54,7 +61,7 @@ class Details extends Component {
                     {/* <ButtonYeuThich navigation={navigation} /> */}
                 </View>
                 {/* BODY DETAILS */}
-                <BodyDetails item= { this.state.data } navigation={navigation} />
+                <BodyDetails item= { data } navigation={navigation} />
                 {/* BUTTON MUA NGAY */}
                 <View>
                 </View>

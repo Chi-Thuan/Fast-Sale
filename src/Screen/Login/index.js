@@ -36,7 +36,7 @@ class Login extends Component {
     componentDidMount() {
 
         GoogleSignin.configure({
-            webClientId: '855836727440-ljpncdfvki2p42ebde3fj3dt2fsvuncb.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            webClientId: '855836727440-qq316o4javn93d3ee007p3vjuurvg56d.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
             offlineAccess: true,
         });
     }
@@ -180,6 +180,7 @@ class Login extends Component {
                             Email
                         </Text>
                         <TextInput
+                            autoCapitalize='none'
                             onChangeText={(e) => {this.setState({ txtEmail : e })}}
                             keyboardType='email-address'
                             style={[style.txtInput]}
