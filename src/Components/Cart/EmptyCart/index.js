@@ -28,7 +28,7 @@ class EmptyCart extends Component {
                         Không có sản phẩm nào trong giỏ hàng
                     </Text>
                     <TouchableOpacity
-                        onPress={ () => this.props.goHome.navigate(ScreenKey.HOME) }>
+                        onPress={ () => this.props.goHome.navigate(ScreenKey.HOME_NAVIGATOR) }>
                         <View style={[style.btnGoHome]}>
                             <Text style={[style.txtBtn]}>Đi mua sắm</Text>
                         </View>

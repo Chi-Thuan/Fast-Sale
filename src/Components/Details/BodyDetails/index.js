@@ -41,6 +41,9 @@ class ButtonBack extends Component {
 
         const { navigation, item } = this.props
         const UserLogin = await AsyncStorage.getItem('userLogin')
+
+        console.log(UserLogin)
+
         if(UserLogin != null) {
             const result = await likeProduct(item._id)
             if(!result.result) {
