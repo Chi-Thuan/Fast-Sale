@@ -16,7 +16,7 @@ import { formatCurrencyVND } from '../../../Utils/utils'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 import * as ScreenKey from '../../../Constant/ScreenKey'
 import { likeProduct } from '../../../Services/api'
-import { getProductById, checkIsLikeProduct } from '../../../Services/api'
+import { dislikeProduct, checkIsLikeProduct } from '../../../Services/api'
 
 class ButtonBack extends Component {
 
@@ -62,7 +62,14 @@ class ButtonBack extends Component {
     
 
     _handleDisLikeProduct = async () => {
-        alert('xoa khoi danh')
+        const { item } = this.props
+        const result = await dislikeProduct(item._id)
+        if(!result.error) {
+            this.setState({ isLike : false })
+            alert('Đã xóa khỏi danh sách yêu thích!')
+        }else{
+            alert(result.message)
+        }
     }
 
     render(){
