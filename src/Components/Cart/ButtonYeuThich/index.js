@@ -14,14 +14,12 @@ import * as ScreenKey from '../../../Constant/ScreenKey'
 class ButtonYeuThich extends Component {
     render() {
 
-        const { navigation } = this.props
+        const { navigateFavorite } = this.props
 
         return (
             <TouchableOpacity
                 activeOpacity={0.6}
-                onPress={() => { 
-                    navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.FAVORITE })
-                }}
+                onPress={navigateFavorite}
                 >
                 <View style={[style.container]}>
                     <Image

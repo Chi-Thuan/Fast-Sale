@@ -94,6 +94,25 @@ class Cart extends Component {
         }
     }
 
+    __navigateFavorite =  async () => {
+        const { navigation } = this.props
+        const userLogin = await AsyncStorage.getItem('userLogin')
+        if(!userLogin) {
+            Alert.alert("Thông báo", "Bạn phải đăng nhập để sử dụng tính năng này!", [
+                { text : "Hủy" },
+                { text : 'Đăng nhập',  onPress : () => {
+                    navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN, params : {
+                        conditionNavigate : {
+                            screen : ScreenKey.FAVORITE
+                        }
+                    }})  
+                }}
+            ])
+        }else{
+            navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.FAVORITE })  
+        }
+    }
+
     render() {
 
         const { listCart, priceTotal } = this.state
@@ -114,7 +133,7 @@ class Cart extends Component {
                     <Text style={style.title}>
                             Giỏ hàng
                     </Text>
-                    <ButtonYeuThich navigation={navigation} />
+                    <ButtonYeuThich navigateFavorite={this.__navigateFavorite} />
                 </View>
 
                 {
@@ -124,7 +143,9 @@ class Cart extends Component {
                     <ListCartItem totalPrice={priceTotal} updateCart={this._updateCart} data={listCart} navigateCheckout={this.__navigateCheckout} /> 
                     :
                     /* KHÔNG CÓ SẢN PHẨM */
-                    <ScrollView>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        >
                         <EmptyCart goHome={this.props.navigation} />
                         <ProductOffer _openModalAddToCart={(_id) => this._openModalAddToCart(_id)} navigation={this.props.navigation} />
                     </ScrollView>

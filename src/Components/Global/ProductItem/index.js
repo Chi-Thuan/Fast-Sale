@@ -31,19 +31,34 @@ class ProductItem extends Component {
                     }})}
             >
                 <View style={[style.wrapCart]}>
-                    <Image
-                        style={[style.avatarCart]}
-                        source={{ uri : BASE_URL + item.thumbnail }}
-                    />   
+                    <View style={style.wrapAvatarCart}>
+                        <Image
+                            style={[style.avatarCart]}
+                            source={{ uri : BASE_URL + item.thumbnail }}
+                        />   
+                    </View>
                     <View style={[style.wrapInfoCart]}>
-                        <Text numberOfLines={2}
+                    <Text style={[style.price]}>
+                                { formatCurrencyVND(item.price) }
+                            </Text>
+                        <Text numberOfLines={3}
                             style={[style.titleCart]}>
                             { item.name }
                         </Text>
                         <View style={[style.priceCart]}>
-                            <Text style={[style.price]}>
+                            {/* <Text style={[style.price]}>
                                 { formatCurrencyVND(item.price) }
-                            </Text>
+                            </Text> */}
+                             <TouchableOpacity
+                                style={{ flex : 1, marginRight : _widthScale(10) }}
+                                onPress={showModalAddToCart}
+                                >
+                                <View style={style.wrapTxtBuyNow}>
+                                    <Text style={[{ color : COLOR.WHITE, fontWeight : 'bold', fontSize : _heightScale(16) }]}>
+                                        Mua ngay
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={showModalAddToCart}
                                 >
@@ -68,26 +83,40 @@ const style = StyleSheet.create({
         width : (WIDTH_DIMENSION - _widthScale(39))/2,
         margin : _widthScale(5),
         backgroundColor : COLOR.WHITE,
-        borderRadius : _widthScale(10),
-        overflow : 'hidden'
+        borderRadius : _widthScale(5),
+        overflow : 'hidden',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    wrapAvatarCart : {
+        borderBottomWidth : 1,
+        borderBottomColor : COLOR.TEXT_GREY
     },
     avatarCart : {
         width : '100%',
-        height : _heightScale(220)
+        height : _heightScale(200),
     },
     wrapInfoCart : {
         flex : 1,
         justifyContent : 'space-between',
-        padding : _widthScale(8)
+        padding : _widthScale(8),
+        paddingTop : _heightScale(15)
     },
     titleCart : {
         color : COLOR.TEXT_NORMAL,
         fontSize : _heightScale(15),
         lineHeight : _heightScale(20),
-        marginTop :_widthScale(5)
+        marginTop :_widthScale(5),
+        fontWeight : 'bold'
     },
     priceCart : {
-        marginTop : _widthScale(6),
+        marginTop : _widthScale(15),
         marginBottom : _widthScale(5),
         flexDirection : 'row',
         alignItems: 'center',
@@ -102,9 +131,18 @@ const style = StyleSheet.create({
         width : _widthScale(35),
         height : _widthScale(30),
         borderRadius : 5,
-        backgroundColor : COLOR.MAIN_COLOR,
+        backgroundColor : COLOR.TEXT_GREY,
         justifyContent : 'center',
         alignItems : 'center',
+    },
+    wrapTxtBuyNow : {
+        width : '100%',
+        backgroundColor : COLOR.MAIN_COLOR,
+        height : _widthScale(30),
+        borderRadius : 5,
+        backgroundColor : COLOR.MAIN_COLOR,
+        justifyContent : 'center',
+        alignItems : 'center'
     },
     iconCart : {
         width : _widthScale(13),
