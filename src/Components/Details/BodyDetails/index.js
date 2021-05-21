@@ -17,6 +17,7 @@ import AsyncStorage  from '@react-native-async-storage/async-storage'
 import * as ScreenKey from '../../../Constant/ScreenKey'
 import { likeProduct } from '../../../Services/api'
 import { dislikeProduct, checkIsLikeProduct } from '../../../Services/api'
+import HTML from "react-native-render-html";
 
 class ButtonBack extends Component {
 
@@ -120,9 +121,10 @@ class ButtonBack extends Component {
                     <Text style={[style.titleBox]}>
                         Chi tiết sản phẩm 
                     </Text>
-                    <Text style={[style.contentBoxDes]}>
-                    {item.description}
-                    </Text>
+                    {/* <Text style={[style.contentBoxDes]}> */}
+                    {/* </Text> */}
+                     <HTML source={{ html: `${item.description}` }}/>
+                   
                 </View>
 
             </ScrollView>
