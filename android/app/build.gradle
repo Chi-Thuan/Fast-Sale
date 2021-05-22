@@ -208,6 +208,7 @@ dependencies {
     implementation "com.facebook.android:facebook-android-sdk:[4,5)"
 
     implementation 'com.android.support:multidex:1.0.3'
+    implementation project(':react-native-linear-gradient')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
