@@ -11,6 +11,7 @@ const images = {
 
     //CART COMPONENT
     ICON_CART_WHITE : require('./ComponentsGlobal/icon_cart_white.png'),
+    ICON_CART_TRASH : require('./Cart/166.png'),
 
     // PAGE HOME
     ICON_SEARCH_HOME : require('./Home/icon-search_home.png'),
@@ -44,6 +45,8 @@ const images = {
     LOGIN_ICON_WRONG_PASS : require('./Login/Group_8.png'),
     LOGIN_ICON_EXIST : require('./Login/105.png'),
     LOGIN_ICON_DONE : require('./Login/93.png'),
+    LOGIN_BG : require('./Login/bg_login.jpg'),
+    ICON_DANGPHATTRIEN : require('./Login/22.png'),
 }
 
 export default images

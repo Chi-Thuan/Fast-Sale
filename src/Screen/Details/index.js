@@ -14,6 +14,8 @@ import ButtonYeuThich from '../../Components/Cart/ButtonYeuThich/index'
 import BodyDetails from '../../Components/Details/BodyDetails/index'
 import { getProductById, checkIsLikeProduct } from '../../Services/api'
 import { formatCurrencyVND } from '../../Utils/utils'
+import * as _font from '../../Constant/Font'
+import LinearGradient from 'react-native-linear-gradient';
 
 class Details extends Component {
 
@@ -65,14 +67,25 @@ class Details extends Component {
                 <BodyDetails item= { data } navigation={navigation} />
                 {/* BUTTON MUA NGAY */}
                 <View style={style.wrap_button_buynow}>
-                    <TouchableOpacity style={{ flex : 2 }}>
-                        <View style={style.btn_mua_ngay}>
-                            <Text style={[style.txtMuangay]}>Mua ngay</Text>
-                        </View>
+                    <TouchableOpacity 
+                        style={{ flex : 2 }}
+                        activeOpacity={0.7}
+                        >
+                        <LinearGradient 
+                        start={{x: 1, y: 1}}
+                        end={{x: 0, y: 0}}
+                        colors={['#4E37D3', '#2481D6']}
+                        style={style.btn_mua_ngay}
+                        >
+                            <Text style={[_font.stylesFont.fontNolanBold, style.txtMuangay]}>Mua ngay</Text>
+                        </LinearGradient>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ flex : 1 }} >
+                    <TouchableOpacity 
+                        style={{ flex : 1 }} 
+                        activeOpacity={0.7}
+                        >
                         <View style={style.wrap_add_to_card}>
-                            <Text style={[style.wrap_txt_add_to_card]}>
+                            <Text style={[_font.stylesFont.fontNolanBold, style.wrap_txt_add_to_card]}>
                                 Thêm giỏ hàng
                             </Text>
                         </View>
@@ -118,13 +131,10 @@ const style = StyleSheet.create({
         width : '100%',
         flexDirection : 'row',
         justifyContent : 'space-between',
-        borderTopLeftRadius : _widthScale(10),
-        borderTopRightRadius : _widthScale(10),
         overflow : 'hidden',
-        // paddingHorizontal : _widthScale(18),
         alignItems : 'center',
         backgroundColor : COLOR.WHITE,
-        height : _heightScale(55),
+        height : _heightScale(60),
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -147,7 +157,6 @@ const style = StyleSheet.create({
         color : COLOR.WHITE,
         fontSize : _heightScale(16),
         textTransform : 'uppercase',
-        fontWeight : 'bold'
     },
     wrap_add_to_card : {
         padding  : _heightScale(10),
@@ -159,9 +168,8 @@ const style = StyleSheet.create({
     },
     wrap_txt_add_to_card : {
         color : COLOR.WHITE,
-        fontSize : _heightScale(16),
+        fontSize : _heightScale(15),
         textTransform : 'uppercase',
-        fontWeight : 'bold'
     }
 })
 

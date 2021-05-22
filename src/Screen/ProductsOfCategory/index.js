@@ -6,7 +6,10 @@ import {
     StyleSheet, 
     TouchableOpacity, 
     ScrollView,
-    ActivityIndicator } from 'react-native'
+    ActivityIndicator,
+    FlatList,
+    Pressable 
+ } from 'react-native'
 import { _widthScale, _heightScale, BASE_URL }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
 import * as ScreenKey from '../../Constant/ScreenKey'
@@ -66,6 +69,7 @@ class ProductsOfCategory extends Component {
         this.setState({ isAddToCart : false })
     }
 
+  
     render() {
         const { 
             isLoading,
@@ -73,6 +77,31 @@ class ProductsOfCategory extends Component {
             infoSubCategory,
             dataProduct
         } = this.state
+
+        const fromData = (data, numColumns) => {
+            const numberOfFullRows = Math.floor(data.length/numColumns);
+            let numberOfElementLastRow = data.length - (numberOfFullRows * numColumns)
+            while(numberOfElementLastRow !== numColumns && numberOfElementLastRow !== 0) {
+                data.push({ key : `blank - ${numberOfElementLastRow}`, empty : true })
+                numberOfElementLastRow = numberOfElementLastRow + 1
+            }
+            return data
+        }
+
+        const numColumns = 2
+
+        const _renderItem = ({ item, index }) => {
+            if(item.empty == true) {
+                return <View style={{width : _widthScale(300)}}/>
+            }
+            return  <ProductItem 
+                        item={item} 
+                        key={index} 
+                        goToDetails={this.props.navigation} 
+                        showModalAddToCart={() => this._openModalAddToCart(item._id)}
+                    />
+        }
+    
         return(
             <View style={style.container}>
 
@@ -124,22 +153,14 @@ class ProductsOfCategory extends Component {
                     <View style={{flex : 1, justifyContent : 'center',alignItems : 'center' }}>
                         <ActivityIndicator size="large" color={COLOR.MAIN_COLOR} />
                     </View> :
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        >
-                        <View style  ={[style.wrapBody]}>
-                            {
-                                dataProduct.map((item, index) => 
-                                    <ProductItem 
-                                        item={item} 
-                                        key={index} 
-                                        goToDetails={this.props.navigation} 
-                                        showModalAddToCart={() => this._openModalAddToCart(item._id)}
-                                        />
-                                )
-                            }
-                        </View>
-                    </ScrollView>
+                    <View style={{alignItems : 'center'}}>
+                         <FlatList 
+                            showsVerticalScrollIndicator={false}
+                            numColumns={2}
+                            data={fromData(dataProduct, numColumns)}
+                            renderItem={_renderItem}
+                        />
+                    </View>
                }
             </View>
         )
@@ -185,6 +206,9 @@ const style = StyleSheet.create({
         flexWrap : 'wrap',
         justifyContent : 'space-between'
     },
+    hidden_item : {
+        opacity : 0
+    }
 })
 
 export default ProductsOfCategory

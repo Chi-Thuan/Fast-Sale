@@ -23,7 +23,7 @@ class ModalMustLogin extends Component {
 
     render() {
 
-        const { isVisible, closeModal, actionAccept } = this.props
+        const { isVisible, closeModal, actionAccept, content, icon, txtCancel = "Hủy" , txtAccept = "Đồng ý"} = this.props
 
         return (
             <Modal
@@ -42,11 +42,11 @@ class ModalMustLogin extends Component {
                     <View style={style.wrap_icon}>
                         <Image
                             style={style.icon}
-                            source={IMAGES.MODAL_ICON_ERROR}
+                            source={icon}
                         />
                     </View>
-                    <Text style={[ _font.stylesFont.fontDinTextPro, style.txt]}>
-                        Oh no... Bạn phải đăng nhập để sử dụng tính năng này!
+                    <Text style={[ _font.stylesFont.fontNolanBold, style.txt]}>
+                        {content}
                     </Text>
 
                     <View style={style.wrap_button}>
@@ -57,7 +57,7 @@ class ModalMustLogin extends Component {
                             >
                             <View style={[style.button, { backgroundColor : COLOR.TEXT_GREY }]}>
                                 <Text style={[_font.stylesFont.fontDinTextPro, style.txt_btn ]}>
-                                    Đóng
+                                    {txtCancel}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -66,17 +66,16 @@ class ModalMustLogin extends Component {
                             activeOpacity={0.7}
                             onPress={actionAccept}  
                             >
-                            <LinearGradient 
-                                start={{x: 1, y: 1}}
-                                end={{x: 0, y: 0}}
-                                colors={['#4E37D3', '#2481D6']}
-                                style={style.button}
-                                >
-                                    <Text style={[_font.stylesFont.fontDinTextPro,style.txt_btn]}>
-                                        Đăng nhập
-                                    </Text>
-                            </LinearGradient>
-                             
+                                  <LinearGradient 
+                                    start={{x: 1, y: 1}}
+                                    end={{x: 0, y: 0}}
+                                    colors={['#4E37D3', '#2481D6']}
+                                    style={style.button}
+                                    >
+                                         <Text style={[_font.stylesFont.fontDinTextPro,style.txt_btn]}>
+                                            {txtAccept}
+                                        </Text>
+                                    </LinearGradient>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -15,14 +15,22 @@ import IMAGES from '../../../Constant/Images/index'
 import * as COLOR from '../../../Constant/Color/index'
 import * as ScreenKey from '../../../Constant/ScreenKey'
 import { formatCurrencyVND } from '../../../Utils/utils'
+import * as _font from '../../../Constant/Font'
+import Icon from 'react-native-vector-icons/dist/FontAwesome'
+import ModalConfirm from '../../../Components/Modal/ModalConfirm/index'
 
 class CartItem extends Component {
 
     constructor(){
         super()
         this.state = {
-            count : 1
+            count : 1,
+            isShowRemoveProduct : false
         }
+    }
+
+    _handleOpenRemoveProduct = () => {
+        this.setState({ isShowRemoveProduct : !this.state.isShowRemoveProduct })
     }
 
     componentDidMount() {
@@ -54,33 +62,35 @@ class CartItem extends Component {
         this.props.updateCart()
     }
 
-    __removeCart = () => {
-        Alert.alert("Xóa khỏi giỏ hàng", "Xóa sản phẩm này ra khỏi giỏ hàng?", [
-            { text : "Không" },
-            { text : 'Xóa',  onPress : async () => {  
-                const listCart = JSON.parse(await AsyncStorage.getItem('cart'))
-                const new_list = listCart.filter(item => item._id !== this.props.data._id )
-                await AsyncStorage.setItem('cart', JSON.stringify(new_list))
-                this.props.updateCart()
-            }}
-        ])
+    __removeCart = async () => {  
+        const listCart = JSON.parse(await AsyncStorage.getItem('cart'))
+        const new_list = listCart.filter(item => item._id !== this.props.data._id )
+        await AsyncStorage.setItem('cart', JSON.stringify(new_list))
+        this.props.updateCart()
     }
 
     render() {
 
+        const { isShowRemoveProduct } = this.state
         const { data, navigation } = this.props
 
         return (
             <View style={[style.container]}>
+
+                <ModalConfirm 
+                    icon={IMAGES.ICON_CART_TRASH}
+                    isVisible={isShowRemoveProduct}
+                    content={"Bạn chắc muốn xóa sản phẩm ra khỏi giỏ hàng?"}
+                    closeModal={this._handleOpenRemoveProduct}
+                    actionAccept={this.__removeCart}
+                />
+
                 <TouchableOpacity 
-                    onPress={this.__removeCart}
+                    onPress={this._handleOpenRemoveProduct}
                     style={[style.wrapBtnDelete]}
                     >
-                    <View>
-                        <Image 
-                            style={style.iconTrash}
-                            source={IMAGES.TRASH}
-                        />
+                    <View style={{ width : _widthScale(30), height : _heightScale(30), alignItems : 'center',}}>
+                        <Icon name="trash" size={_heightScale(22)}  color={COLOR.TEXT_BLACK} />
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -101,7 +111,7 @@ class CartItem extends Component {
                           onPress={() => { navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.DETAILS, params : {  _id : data._id } }) }}
                         >
                         <Text 
-                            style={[style.titleItem]}
+                            style={[_font.stylesFont.fontNolan ,style.titleItem]}
                             numberOfLines={3}
                         >  
                             { data.name }
@@ -109,7 +119,7 @@ class CartItem extends Component {
                     </TouchableOpacity>
                     
                     <View style={[style.wrapInfoBottom]}>
-                        <Text style={[style.txtPrice]}>
+                        <Text style={[_font.stylesFont.fontDinTextPro, style.txtPrice]}>
                         { formatCurrencyVND(data.price) }
                         </Text>
                         <View style={[style.wrapQuantity]}>
@@ -169,7 +179,7 @@ const style = StyleSheet.create({
         borderRadius : 10,
         overflow : 'hidden',
         width : _heightScale(100),
-        height : _heightScale(100)
+        height : _heightScale(100),
     },
     avatar : {
         width : '100%',
@@ -184,7 +194,7 @@ const style = StyleSheet.create({
         justifyContent : 'space-between'
     },
     titleItem : {
-        fontSize : _heightScale(16),
+        fontSize : _heightScale(18),
         color : COLOR.TEXT_BLACK,
         lineHeight : _heightScale(20)
     },
@@ -194,8 +204,7 @@ const style = StyleSheet.create({
         justifyContent : 'space-between',
     },
     txtPrice : {
-        fontSize : _heightScale(20),
-        fontWeight : 'bold'
+        fontSize : _heightScale(22),
     },
     wrapQuantity : {
         flexDirection : 'row',

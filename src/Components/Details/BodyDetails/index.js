@@ -18,6 +18,7 @@ import * as ScreenKey from '../../../Constant/ScreenKey'
 import { likeProduct } from '../../../Services/api'
 import { dislikeProduct, checkIsLikeProduct } from '../../../Services/api'
 import HTML from "react-native-render-html";
+import * as _font from '../../../Constant/Font'
 
 class ButtonBack extends Component {
 
@@ -95,7 +96,7 @@ class ButtonBack extends Component {
                     </View>
                     {/* GIÁ */}
                     <View style={[style.wrapPrice]}>
-                        <Text style={[style.txtPrice]}>
+                        <Text style={[_font.stylesFont.fontFester500, style.txtPrice]}>
                             { formatCurrencyVND(item.price) }
                         </Text>
 
@@ -112,7 +113,7 @@ class ButtonBack extends Component {
                         </TouchableWithoutFeedback>
                     </View>
                     {/* TÊN SẢN PHẨM */}
-                    <Text style={[style.nameProduct]}>
+                    <Text style={[_font.stylesFont.fontNolanBold, style.nameProduct]}>
                         {item.name}
                     </Text>
                </View>
@@ -121,8 +122,6 @@ class ButtonBack extends Component {
                     <Text style={[style.titleBox]}>
                         Chi tiết sản phẩm 
                     </Text>
-                    {/* <Text style={[style.contentBoxDes]}> */}
-                    {/* </Text> */}
                      <HTML source={{ html: `${item.description}` }}/>
                    
                 </View>
@@ -138,7 +137,7 @@ const style = StyleSheet.create({
     },
     wrapAvatar : {
         width : '100%',
-        height : _heightScale(500),
+        height : _heightScale(400),
     },
     avatar : {
         width : '100%',
@@ -155,9 +154,10 @@ const style = StyleSheet.create({
         backgroundColor : COLOR.WHITE
     },
     txtPrice : {
-        fontSize : _heightScale(34),
-        color : COLOR.BLACK,
-        fontWeight : 'bold' 
+        fontSize : _heightScale(40),
+        // color : COLOR.BLACK,
+        color : COLOR.MAIN_COLOR
+        // fontWeight : 'bold' 
     },
     wrapBtnFavorite : {
         width : _heightScale(38),
@@ -183,6 +183,7 @@ const style = StyleSheet.create({
         fontSize : _heightScale(22),
         lineHeight : _heightScale(30),
         paddingBottom : _heightScale(15),
+       
     },
     boxContainer2 : {
         marginTop : _heightScale(10),

@@ -16,6 +16,8 @@ import * as COLOR from '../../../Constant/Color/index'
 import * as ScreenKey from '../../../Constant/ScreenKey'
 import IMAGES from '../../../Constant/Images/index'
 import { formatCurrencyVND } from '../../../Utils/utils'
+import * as _font from '../../../Constant/Font'
+import LinearGradient from 'react-native-linear-gradient';
 
 class ProductItem extends Component {
     render() {
@@ -38,29 +40,35 @@ class ProductItem extends Component {
                         />   
                     </View>
                     <View style={[style.wrapInfoCart]}>
-                    <Text style={[style.price]}>
-                                { formatCurrencyVND(item.price) }
-                            </Text>
-                        <Text numberOfLines={3}
-                            style={[style.titleCart]}>
+                    <Text numberOfLines={3}
+                            style={[_font.stylesFont.fontDinTextPro , style.titleCart]}>
                             { item.name }
                         </Text>
-                        <View style={[style.priceCart]}>
-                            {/* <Text style={[style.price]}>
+                    <Text style={[_font.stylesFont.fontFester500, style.price]}>
                                 { formatCurrencyVND(item.price) }
-                            </Text> */}
+                            </Text>
+                      
+                        <View style={[style.priceCart]}>
                              <TouchableOpacity
                                 style={{ flex : 1, marginRight : _widthScale(10) }}
                                 onPress={showModalAddToCart}
+                                activeOpacity={0.7}
                                 >
-                                <View style={style.wrapTxtBuyNow}>
-                                    <Text style={[{ color : COLOR.WHITE, fontWeight : 'bold', fontSize : _heightScale(16) }]}>
-                                        Mua ngay
-                                    </Text>
-                                </View>
+                                    <LinearGradient 
+                                        start={{x: 1, y: 1}}
+                                        end={{x: 0, y: 0}}
+                                        colors={['#4E37D3', '#2481D6']}
+                                        style={style.wrapTxtBuyNow}
+                                        >
+                                        <Text style={[_font.stylesFont.fontNolanBold, { color : COLOR.WHITE, fontSize : _heightScale(16) }]}>
+                                            Mua ngay
+                                        </Text>
+                                    </LinearGradient>
+                               
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={showModalAddToCart}
+                                activeOpacity={0.7}
                                 >
                                 <View style={style.wrapIconCart}>
                                     <Image
@@ -88,19 +96,22 @@ const style = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 1,
         },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        shadowOpacity: 0.18,
+        shadowRadius: 1.00,
+        
+        elevation: 1,
     },
     wrapAvatarCart : {
-        borderBottomWidth : 1,
-        borderBottomColor : COLOR.TEXT_GREY
+        width : '100%',
+        height : _heightScale(130),
+        padding : _heightScale(5)
     },
     avatarCart : {
         width : '100%',
-        height : _heightScale(200),
+        height : '100%',
+        resizeMode : 'cover'
     },
     wrapInfoCart : {
         flex : 1,
@@ -110,22 +121,20 @@ const style = StyleSheet.create({
     },
     titleCart : {
         color : COLOR.TEXT_NORMAL,
-        fontSize : _heightScale(15),
-        lineHeight : _heightScale(20),
-        marginTop :_widthScale(5),
-        fontWeight : 'bold'
+        fontSize : _heightScale(18),
+        lineHeight : _heightScale(22),
     },
     priceCart : {
-        marginTop : _widthScale(15),
+        marginTop : _widthScale(25),
         marginBottom : _widthScale(5),
         flexDirection : 'row',
         alignItems: 'center',
         justifyContent : 'space-between'
     },
     price : {
-        fontSize : _heightScale(20),
+        marginTop : _heightScale(6),
+        fontSize : _heightScale(24),
         color : COLOR.MAIN_COLOR,
-        fontWeight : 'bold'
     },
     wrapIconCart : {
         width : _widthScale(35),
@@ -137,10 +146,8 @@ const style = StyleSheet.create({
     },
     wrapTxtBuyNow : {
         width : '100%',
-        backgroundColor : COLOR.MAIN_COLOR,
         height : _widthScale(30),
         borderRadius : 5,
-        backgroundColor : COLOR.MAIN_COLOR,
         justifyContent : 'center',
         alignItems : 'center'
     },

@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     Image,
     Alert,
-    ScrollView
+    ScrollView,
+    ImageBackground
  } from 'react-native'
 
 import AsyncStorage  from '@react-native-async-storage/async-storage'
@@ -157,7 +158,13 @@ class ScreenRegister extends Component {
                     icon={IMAGES.LOGIN_ICON_WRONG_PASS}
                 />
 
-           <View style={style.container}>
+                <ImageBackground 
+                    source={IMAGES.LOGIN_BG}
+                    style={{flex: 1,
+                    resizeMode: "cover",
+                    justifyContent: "center"}}
+                    >
+<View style={style.container}>
                         {
                             isLoading ? <View style={style.wrap_indicator}>
                                 <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
@@ -255,13 +262,13 @@ class ScreenRegister extends Component {
                                     <View style={style.wrapBtnLogin}>
                                         <ButtonPrimaryFullRow 
                                             chooseAccept={this.__handleRegister}
-                                            txtTitle="Đăng nhập"
+                                            txtTitle="Đăng ký"
                                         />
                                     </View>
 
                                     <View style={style.wrapThongBao}>
                                         <Text  style={[_font.stylesFont.fontDinTextPro, style.txtThongBao]}>
-                                            Nễu đã có tài khoản, vui lòng 
+                                            Nếu đã có tài khoản, vui lòng 
                                         </Text>
                                         <TouchableOpacity
                                             activeOpacity={0.7}
@@ -277,9 +284,9 @@ class ScreenRegister extends Component {
 
                             </View>
                         </ScrollView>
-                    
                     </View>
-          </>   
+                </ImageBackground>
+           </>   
         )
     }
 }
@@ -287,7 +294,6 @@ class ScreenRegister extends Component {
 const style = StyleSheet.create({
     container : {
         flex : 1,
-        backgroundColor  : COLOR.WHITE,
         position : 'relative'
     },
     wrap_indicator : {

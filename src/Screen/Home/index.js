@@ -9,7 +9,7 @@ import {
     TouchableWithoutFeedback,
     
 } from 'react-native'
-import { PacmanIndicator } from 'react-native-indicators';
+import { BarIndicator } from 'react-native-indicators';
 
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
@@ -71,7 +71,7 @@ class Home extends Component {
         return(
             this.state.isLoading ?   
             <View style={{flex : 1, justifyContent : 'center',alignItems : 'center',backgroundColor : COLOR.WHITE}}>
-               <PacmanIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
+               <BarIndicator count={5} size={_heightScale(30)} color={COLOR.MAIN_COLOR} />
             </View>
             : 
             <View style={style.container}>

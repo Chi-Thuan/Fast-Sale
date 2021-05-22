@@ -14,6 +14,8 @@ import { _heightScale, _widthScale } from '../../../Constant/Constants'
 import * as COLOR from '../../../Constant/Color/index'
 import { BASE_URL } from '../../../Constant/Constants'
 import { formatCurrencyVND } from '../../../Utils/utils'
+import * as _font from '../../../Constant/Font'
+import LinearGradient from 'react-native-linear-gradient';
 
 class ModalAddToCart extends Component {
 
@@ -99,6 +101,10 @@ class ModalAddToCart extends Component {
                 >
                 <View style={style.container}>
 
+                    <View style={style.wrap_then_gio_hang}>
+                        <Text style={[ _font.stylesFont.fontDinTextProBold, style.txt_them_gio_hang]}>Thêm vào giỏ hàng</Text>
+                    </View>
+
                     <TouchableOpacity  
                         onPress={closeModal}
                         style={[style.wrapBtnClose]}>
@@ -116,19 +122,19 @@ class ModalAddToCart extends Component {
                             />
                             <View style={[style.infoCart]} >
                                 <Text 
-                                    style={[ style.title ]}
+                                    style={[ _font.stylesFont.fontDinTextPro, style.title ]}
                                     numberOfLines={3}
                                     >
                                 {data.name}
                                 </Text>
-                                <Text style={[ style.des ]}>
+                                <Text style={[_font.stylesFont.fontFester500, style.des ]}>
                                 {formatCurrencyVND(data.price)}
                                 </Text>
                             </View>
                         </View>
 
                         <View style={[ style.wrapQuantity ]}>
-                            <Text style={[ style.titleQuantity ]}>
+                            <Text style={[ _font.stylesFont.fontNolan500, style.titleQuantity ]}>
                                 Số lượng
                             </Text>
                             <View style={[style.wrapBtnQuantity]}>
@@ -144,7 +150,7 @@ class ModalAddToCart extends Component {
                                 </TouchableOpacity>
 
                                 <View style={[ style.countQuantity ]} >
-                                    <Text>
+                                    <Text style={[ _font.stylesFont.fontFester500,]}>
                                         { this.state.count }
                                     </Text>
                                 </View>
@@ -167,11 +173,16 @@ class ModalAddToCart extends Component {
                         onPress={this.__addToCart}
                         activeOpacity={0.7}
                         >
-                        <View style={[style.wrapBtnCheckout]}>
-                            <Text style={[style.btnCheckout]}>
-                                Thêm vào giỏ hàng
-                            </Text>
-                        </View>
+                             <LinearGradient 
+                                start={{x: 1, y: 1}}
+                                end={{x: 0, y: 0}}
+                                colors={['#4E37D3', '#2481D6']}
+                                style={style.wrapBtnCheckout}
+                                >
+                                        <Text style={[ _font.stylesFont.fontNolanBold, ,style.btnCheckout]}>
+                                            Thêm vào giỏ hàng
+                                        </Text>
+                                </LinearGradient>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -187,7 +198,7 @@ const style = StyleSheet.create({
     },
     container : {
         width : '100%',
-        height : _heightScale(400),
+        height : _heightScale(370),
         backgroundColor : COLOR.WHITE,
         borderTopLeftRadius : 10,
         borderTopRightRadius : 10,
@@ -208,7 +219,17 @@ const style = StyleSheet.create({
     },
     wrapBody : {
         alignItems : 'center' ,
-        flex : 1
+        flex : 1,
+        marginTop : _heightScale(10)
+    },
+    wrap_then_gio_hang : {
+        position : 'absolute',
+        top : _heightScale(25),
+        left : _widthScale(18)
+    },  
+    txt_them_gio_hang : {
+        fontSize : _heightScale(22),
+        textTransform : 'uppercase'
     },
     wrapInfoCart : {
         flexDirection : 'row',
@@ -231,7 +252,6 @@ const style = StyleSheet.create({
         height : _heightScale(55),
         justifyContent : 'center',
         alignItems : 'center',
-        backgroundColor : COLOR.MAIN_COLOR,
         borderRadius : 40
     },
     title : {
@@ -240,17 +260,16 @@ const style = StyleSheet.create({
         color : COLOR.BLACK
     },
     des : {
-        fontSize : _heightScale(24),
-        fontWeight : 'bold'
+        fontSize : _heightScale(26),
     },
     wrapQuantity : {
         flex : 1,
         width : '100%',
         justifyContent : 'center',
-        marginBottom : _heightScale(30)
+        marginBottom : _heightScale(15)
     },
     titleQuantity : {
-        fontSize : _heightScale(20),
+        fontSize : _heightScale(18),
         color : COLOR.TEXT_BLACK
     },
     wrapBtnQuantity : {
@@ -267,7 +286,7 @@ const style = StyleSheet.create({
         borderRadius : 5
     },
     countQuantity : {
-        width : _heightScale(50),
+        width : _heightScale(30),
         height : '100%',
         justifyContent : 'center',
         alignItems : 'center',
@@ -276,7 +295,6 @@ const style = StyleSheet.create({
     btnCheckout : {
         fontSize : _heightScale(18),
         textTransform : 'uppercase',
-        fontWeight : 'bold',
         color : COLOR.WHITE,
     }
 })

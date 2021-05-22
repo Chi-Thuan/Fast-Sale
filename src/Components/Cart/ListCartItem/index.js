@@ -12,8 +12,9 @@ import IMAGES from '../../../Constant/Images/index'
 import * as COLOR from '../../../Constant/Color/index'
 import * as ScreenKey from '../../../Constant/ScreenKey'
 import { formatCurrencyVND } from '../../../Utils/utils'
-
+import LinearGradient from 'react-native-linear-gradient';
 import CartItem from '../CartItem/index'
+import * as _font from '../../../Constant/Font'
 
 class ListCartItem extends Component {
     render() {
@@ -30,10 +31,10 @@ class ListCartItem extends Component {
 
                 <View style={[style.wrapRowCheckout]}>
                     <View>
-                        <Text style={[style.titleTotal]}>
+                        <Text style={[_font.stylesFont.fontNolanBold ,style.titleTotal]}>
                             Tổng cộng
                         </Text>
-                        <Text style={[style.txtTotal]}>
+                        <Text style={[_font.stylesFont.fontDinTextProBold, style.txtTotal]}>
                             {formatCurrencyVND(totalPrice)}
                         </Text>
                     </View>
@@ -41,11 +42,16 @@ class ListCartItem extends Component {
                     activeOpacity={0.7}
                     onPress={navigateCheckout}
                     >
-                        <View style={[style.wrapBtnPay]}>
+                         <LinearGradient 
+                            start={{x: 1, y: 1}}
+                            end={{x: 0, y: 0}}
+                            colors={['#4E37D3', '#2481D6']}
+                            style={style.wrapBtnPay}
+                            >
                             <Text style={[style.txtBtnPay]}>
                                 Thanh toán
                             </Text>
-                        </View>
+                    </LinearGradient>
                    </TouchableOpacity>
                 </View>
             </View> 
@@ -83,7 +89,6 @@ const style = StyleSheet.create({
     txtTotal : {
         fontSize : _heightScale(26),
         color : COLOR.MAIN_COLOR,
-        fontWeight : 'bold',
         marginTop : _heightScale(3)
     },
     wrapBtnPay : {

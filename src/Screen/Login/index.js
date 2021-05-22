@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     Image,
     Alert,
-    ScrollView
+    ScrollView,
+    ImageBackground
  } from 'react-native'
 
 import AsyncStorage  from '@react-native-async-storage/async-storage'
@@ -17,7 +18,6 @@ import ButtonBack from '../../Components/Details/ButtonBack/index'
 import ButtonPrimaryFullRow from '../../Components/Global/ButtonPrimaryFullRow/index'
 import IMAGES from '../../Constant/Images/index'
 import * as ScreenKey from '../../Constant/ScreenKey' 
-import PasswordInputText from 'react-native-hide-show-password-input';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
@@ -40,7 +40,8 @@ class Login extends Component {
             isModalNotExist : false,
             isDoneLogin : false,
             isLoading : false,
-            isErrorEmail : false
+            isErrorEmail : false,
+            isDangPhatTrien : false
         }
     }
 
@@ -53,6 +54,7 @@ class Login extends Component {
 
     __handleLoginFacebook = async () => {
         try {
+            console.log('xinc hao')
             const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
             if (result.isCancelled) {
                 throw 'User cancelled the login process';
@@ -131,6 +133,10 @@ class Login extends Component {
         this.setState({ isShowPass : !this.state.isShowPass })
     }
 
+    __handleShowDangPhatTrien = () => {
+        this.setState({ isDangPhatTrien : !this.state.isDangPhatTrien })
+    }
+
     _openModalEmptyInput = () => {
         this.setState({ isEmptyInput : !this.state.isEmptyInput })
     }
@@ -195,10 +201,17 @@ class Login extends Component {
 
     render() {
 
-        const { isShowPass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading, isErrorEmail } = this.state
+        const { isShowPass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading, isErrorEmail,isDangPhatTrien } = this.state
 
         return(
             <>
+
+                <ModalOnlyOK 
+                    isVisible = {isDangPhatTrien}
+                    closeModal = { this.__handleShowDangPhatTrien }
+                    content="Tính năng đang phát triển"
+                    icon={IMAGES.ICON_DANGPHATTRIEN}
+                />
 
                 <ModalOnlyOK 
                     isVisible = {!isEmptyInput}
@@ -236,8 +249,13 @@ class Login extends Component {
                     icon={IMAGES.LOGIN_ICON_WRONG_PASS}
                 />
                 
-
-              <View style={style.container}>
+            <ImageBackground 
+                source={IMAGES.LOGIN_BG}
+                style={{flex: 1,
+                    resizeMode: "cover",
+                    justifyContent: "center"}}
+                >
+            <View style={style.container}>
                         {
                             isLoading ? <View style={style.wrap_indicator}>
                                 <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
@@ -319,7 +337,8 @@ class Login extends Component {
                                         <TouchableOpacity  
                                             style={{ flex : 0.46 }}
                                             activeOpacity={0.7}
-                                            onPress={this.__handleLoginFacebook}
+                                            // onPress={this.__handleLoginFacebook}
+                                            onPress={this.__handleShowDangPhatTrien}
                                             >
                                               
                                             <View style={[style.btn_social, { backgroundColor : COLOR.BLUE }]}>
@@ -333,7 +352,7 @@ class Login extends Component {
 
                                     <View style={style.wrapThongBao}>
                                         <Text  style={[_font.stylesFont.fontDinTextPro, style.txtThongBao]}>
-                                            Nễu chưa có tài khoản, vui lòng 
+                                            Nếu chưa có tài khoản, vui lòng 
                                         </Text>
                                         <TouchableOpacity
                                             activeOpacity={0.7}
@@ -345,13 +364,13 @@ class Login extends Component {
                                             </TouchableOpacity>
                                     </View>
                                 </View>
-
-
                             </View>
                         </ScrollView>
                     
                     </View>
-                    
+             
+            </ImageBackground>
+                   
             </>
            
         )
@@ -361,7 +380,6 @@ class Login extends Component {
 const style = StyleSheet.create({
     container : {
         flex : 1,
-        backgroundColor  : COLOR.WHITE,
         position : 'relative'
     },
     wrap_indicator : {

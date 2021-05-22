@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ImagePropTypes, ScrollView, Alert } from 'react-native'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
-
+import IMAGES from '../../Constant/Images/index'
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
 import { getProductById } from '../../Services/api'
@@ -24,7 +24,7 @@ class Cart extends Component {
             dataAddToCart : {},
             listCart : [],
             priceTotal : 0,
-            isErrorLogin : false
+            isErrorLogin : false,
         }
     }
 
@@ -58,6 +58,7 @@ class Cart extends Component {
         }
     }
 
+
     _openModalAddToCart = async _id => {
         this.setState({ isLoadInfoAddToCart : true })
         const dataLoad = await getProductById(_id)
@@ -84,6 +85,10 @@ class Cart extends Component {
         this.setState({ isErrorLogin : false })
     }
 
+    handleLogin_favorite = () => {
+        this.setState({ isErrorLogin_favorite : !this.state.isErrorLogin_favorite })
+    }
+
     _handleNavigateLogin = () => {
         this.closePopupErrorLogin()
         const { navigation } = this.props
@@ -91,6 +96,17 @@ class Cart extends Component {
             // Đăng nhập xong navigate qua thanh toán
             conditionNavigate : {
                 screen : ScreenKey.CHECKOUT
+            }
+        }})  
+    }
+
+    _handleNavigate_favorite = () => {
+        this.handleLogin_favorite()
+        const { navigation } = this.props
+        navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN, params : {
+            // Đăng nhập xong navigate qua thanh toán
+            conditionNavigate : {
+                screen : ScreenKey.FAVORITE
             }
         }})  
     }
@@ -109,16 +125,17 @@ class Cart extends Component {
         const { navigation } = this.props
         const userLogin = await AsyncStorage.getItem('userLogin')
         if(!userLogin) {
-            Alert.alert("Thông báo", "Bạn phải đăng nhập để sử dụng tính năng này!", [
-                { text : "Hủy" },
-                { text : 'Đăng nhập',  onPress : () => {
-                    navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN, params : {
-                        conditionNavigate : {
-                            screen : ScreenKey.FAVORITE
-                        }
-                    }})  
-                }}
-            ])
+            this.handleLogin_favorite()
+            // Alert.alert("Thông báo", "Bạn phải đăng nhập để sử dụng tính năng này!", [
+            //     { text : "Hủy" },
+            //     { text : 'Đăng nhập',  onPress : () => {
+            //         navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN, params : {
+            //             conditionNavigate : {
+            //                 screen : ScreenKey.FAVORITE
+            //             }
+            //         }})  
+            //     }}
+            // ])
         }else{
             navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.FAVORITE })  
         }
@@ -137,6 +154,12 @@ class Cart extends Component {
                     closeModal={this.closePopupErrorLogin}
                     actionAccept={this._handleNavigateLogin}
                     /> 
+
+                <ModalMustLogin 
+                    isVisible={this.state.isErrorLogin_favorite} 
+                    closeModal={this.handleLogin_favorite}
+                    actionAccept={this._handleNavigate_favorite}
+                /> 
 
                 <ModalAddToCart 
                     openModal={this.state.isAddToCart}
