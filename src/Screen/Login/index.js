@@ -6,7 +6,8 @@ import {
     TextInput,
     TouchableOpacity,
     Image,
-    Alert
+    Alert,
+    ScrollView
  } from 'react-native'
 
 import AsyncStorage  from '@react-native-async-storage/async-storage'
@@ -22,7 +23,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import { loginAccount } from '../../Services/api'
-
+import * as _font from '../../Constant/Font'
 
 class Login extends Component {
 
@@ -166,104 +167,197 @@ class Login extends Component {
         const { isShowPass } = this.state
 
         return(
-            <View style={style.container}>
-                <View style={[style.wrapTitle]}>
-                    <ButtonBack goBack={() => this.props.navigation.goBack()} />
-                    <Text style={style.title}>
-                            Đăng nhập
-                    </Text>
-                </View>
-                <View style={style.wrapBody}>
-                    <View style={[style.wrapInput]}>
-                        <Text
-                            style={[style.titleInput]}>
-                            Email
-                        </Text>
-                        <TextInput
-                            autoCapitalize='none'
-                            onChangeText={(e) => {this.setState({ txtEmail : e })}}
-                            keyboardType='email-address'
-                            style={[style.txtInput]}
-                        />
-                    </View>
-
-                    <View style={[style.wrapInput, { marginTop : _heightScale(30) }]}>
-                        <Text
-                            style={[style.titleInput]}>
-                            Mật khẩu
-                        </Text>
-                        <View style={style.wrap_pass}>
-                            <TextInput
-                                onChangeText={(e) => {this.setState({ txtPassword : e })}}
-                                secureTextEntry={!isShowPass}
-                                style={[style.txtInput]}
-                                />
-                            <TouchableOpacity style={style.btn_showPass}
-                                activeOpacity={0.7}
-                                onPress={this.__handleShowPass}
+            <>
+                {
+                    2 > 1 ? 
+                    <View style={style.container}>
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
                             >
-                                {
-                                    isShowPass ? 
-                                        <Icon name="eye" size={_heightScale(26)} color={COLOR.MAIN_COLOR} />
-                                        :
-                                        <Icon name="eye-slash" size={_heightScale(26)} color={COLOR.MAIN_COLOR} />
-                                }
-                                
+                            <View style={style.wrapBody_new}>
+                                <View style={style.wrap_avatar}>
+                                    <Image 
+                                        style={style.avatar}
+                                        source={IMAGES.LOGIN_ICON_APP}
+                                    />
+                                </View>
+
+                                <View style={style.wrap_input}>
+                                    <Text style={[_font.stylesFont.fontNolanBold ,style.title_input]}>
+                                        Đăng nhập
+                                    </Text>
+                                    <View style={style.input_item}>
+                                        <View style={style.icon_input}>
+                                            <Icon name="envelope" size={_heightScale(22)}  color={COLOR.MAIN_COLOR} />
+                                        </View>
+                                        <TextInput
+                                            placeholder="Nhập Email"
+                                            style={[_font.stylesFont.fontNolan500, style.input]}
+                                            />
+                                    </View>
+                                    <View style={style.input_item}>
+                                        <View style={[style.icon_input, {left : _widthScale(12), top : _heightScale(15)}]}>
+                                            <Icon name="lock" size={_heightScale(28)} color={COLOR.MAIN_COLOR} />
+                                        </View>
+                                        <TextInput 
+                                            secureTextEntry={!isShowPass}
+                                            placeholder="Nhập mật khẩu"  
+                                            style={[_font.stylesFont.fontNolan500, style.input]}
+                                            />
+                                    </View>
+                                    <View style={style.wrapBtnLogin}>
+                                        <ButtonPrimaryFullRow 
+                                            chooseAccept={this.__handleLoginAccount}
+                                            txtTitle="Đăng nhập"
+                                        />
+                                    </View>
+                                    <View style={style.wrap_login_social}>
+                                        <TouchableOpacity 
+                                            style={{ flex : 0.46 }}
+                                            activeOpacity={0.7}
+                                            >
+                                            <View style={[style.btn_social,{ backgroundColor : COLOR.PINK }]}>
+                                                <Icon name="google" size={_heightScale(22)}  color={COLOR.WHITE} />
+                                                <Text style={[_font.stylesFont.fontNolan500, style.txt_social]}>
+                                                    Google
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity  
+                                            style={{ flex : 0.46 }}
+                                            activeOpacity={0.7}
+                                            >
+                                            <View style={[style.btn_social, { backgroundColor : COLOR.BLUE }]}>
+                                                <Icon name="facebook-f" size={_heightScale(22)}  color={COLOR.WHITE} />
+                                                <Text  style={[_font.stylesFont.fontNolan500, style.txt_social]}>
+                                                    Facebook
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={style.wrapThongBao}>
+                                        <Text  style={[_font.stylesFont.fontDinTextPro, style.txtThongBao]}>
+                                            Nễu chưa có tài khoản, vui lòng 
+                                        </Text>
+                                        <TouchableOpacity
+                                            activeOpacity={0.7}
+                                            onPress={() => { this.props.navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.REGISTER }) }}
+                                            >
+                                                <Text style={{ fontSize : _heightScale(20), color : COLOR.MAIN_COLOR, textDecorationLine : 'underline', fontWeight : 'bold' }}>
+                                                    {` Đăng ký `}
+                                                </Text>
+                                            </TouchableOpacity>
+                                    </View>
+                                </View>
+
+
+                            </View>
+                        </ScrollView>
+                    </View>
+                    :
+                    <View style={style.container}>
+                    <View style={[style.wrapTitle]}>
+                        <ButtonBack goBack={() => this.props.navigation.goBack()} />
+                        <Text style={style.title}>
+                                Đăng nhập
+                        </Text>
+                    </View>
+                    <View style={style.wrapBody}>
+                        <View style={[style.wrapInput]}>
+                            <Text
+                                style={[style.titleInput]}>
+                                Email
+                            </Text>
+                            <TextInput
+                                autoCapitalize='none'
+                                onChangeText={(e) => {this.setState({ txtEmail : e })}}
+                                keyboardType='email-address'
+                                style={[style.txtInput]}
+                            />
+                        </View>
+    
+                        <View style={[style.wrapInput, { marginTop : _heightScale(30) }]}>
+                            <Text
+                                style={[style.titleInput]}>
+                                Mật khẩu
+                            </Text>
+                            <View style={style.wrap_pass}>
+                                <TextInput
+                                    onChangeText={(e) => {this.setState({ txtPassword : e })}}
+                                    secureTextEntry={!isShowPass}
+                                    style={[style.txtInput]}
+                                    />
+                                <TouchableOpacity style={style.btn_showPass}
+                                    activeOpacity={0.7}
+                                    onPress={this.__handleShowPass}
+                                >
+                                    {
+                                        isShowPass ? 
+                                            <Icon name="eye" size={_heightScale(26)} color={COLOR.MAIN_COLOR} />
+                                            :
+                                            <Icon name="eye-slash" size={_heightScale(26)} color={COLOR.MAIN_COLOR} />
+                                    }
+                                    
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+    
+                        <View style={style.wrapBtnLogin}>
+                            <ButtonPrimaryFullRow 
+                                chooseAccept={this.__handleLoginAccount}
+                                txtTitle="Đăng nhập"
+                            />
+                        </View>
+                    
+                        <View style={style.wrapLine}>
+                            <View style={style.line} /> 
+                            <Text style={style.titleOr}>
+                                Hoặc
+                            </Text>
+                            <View style={style.line}/>
+                        </View>
+    
+                        <View style={style.wrapSocial}>
+                            <TouchableOpacity
+                                onPress={ this.__handleLoginGoogle }
+                                activeOpacity={0.7}
+                                >
+                                <Image
+                                    style={style.iconSocial}
+                                    source={IMAGES.ICON_GOOGLE}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                activeOpacity={0.7}
+                                onPress={this.__handleLoginFacebook}
+                                >
+                                <Image
+                                    style={style.iconSocial}
+                                    source={IMAGES.ICON_FACEBOOK}
+                                />
                             </TouchableOpacity>
                         </View>
-                    </View>
-
-                    <View style={style.wrapBtnLogin}>
-                        <ButtonPrimaryFullRow 
-                            chooseAccept={this.__handleLoginAccount}
-                            txtTitle="Đăng nhập"
-                        />
-                    </View>
-                
-                    <View style={style.wrapLine}>
-                        <View style={style.line} /> 
-                        <Text style={style.titleOr}>
-                            Hoặc
-                        </Text>
-                        <View style={style.line}/>
-                    </View>
-
-                    <View style={style.wrapSocial}>
-                        <TouchableOpacity
-                            onPress={ this.__handleLoginGoogle }
-                            activeOpacity={0.7}
-                            >
-                            <Image
-                                style={style.iconSocial}
-                                source={IMAGES.ICON_GOOGLE}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            activeOpacity={0.7}
-                            onPress={this.__handleLoginFacebook}
-                            >
-                            <Image
-                                style={style.iconSocial}
-                                source={IMAGES.ICON_FACEBOOK}
-                            />
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={style.wrapThongBao}>
-                        <Text style={style.txtThongBao}>
-                            {`Nễu chưa có tài khoản, vui lòng `}
-                        </Text>
-                        <TouchableOpacity
-                            activeOpacity={0.7}
-                            onPress={() => { this.props.navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.REGISTER }) }}
-                            >
-                                <Text style={{ fontSize : _heightScale(20), color : COLOR.MAIN_COLOR, textDecorationLine : 'underline', fontWeight : 'bold' }}>
-                                    Đăng ký 
-                                </Text>
-                            </TouchableOpacity>
+    
+                        <View style={style.wrapThongBao}>
+                            <Text style={style.txtThongBao}>
+                                {`Nễu chưa có tài khoản, vui lòng `}
+                            </Text>
+                            <TouchableOpacity
+                                activeOpacity={0.7}
+                                onPress={() => { this.props.navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.REGISTER }) }}
+                                >
+                                    <Text style={{ fontSize : _heightScale(20), color : COLOR.MAIN_COLOR, textDecorationLine : 'underline', fontWeight : 'bold' }}>
+                                        Đăng ký 
+                                    </Text>
+                                </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-        </View>
+                }
+            </>
+           
         )
     }
 }
@@ -271,8 +365,87 @@ class Login extends Component {
 const style = StyleSheet.create({
     container : {
         flex : 1,
-        backgroundColor  : COLOR.WHITE
+        backgroundColor  : COLOR.BLACK
     },
+    wrapBody_new : {
+        alignItems : 'center',
+        paddingTop : _heightScale(70)
+    },
+    wrap_avatar : {
+        width : _heightScale(100),
+        borderRadius : 5,
+        overflow : 'hidden',
+    },
+    avatar : {
+        width : _heightScale(100),
+        height : _heightScale(100),
+        resizeMode : 'contain'
+    },
+    wrap_input : {
+        width : '100%',
+        paddingHorizontal : _widthScale(18),
+        marginTop : _heightScale(80)
+    },
+    title_input : {
+        fontSize : _heightScale(24),
+        marginBottom : _heightScale(20),
+        color : COLOR.MAIN_COLOR
+    },
+    input_item : {
+        marginBottom : _heightScale(30),
+        position : 'relative',
+        width : '100%',
+        height : _heightScale(60),
+        borderRadius : 5,
+        overflow : 'hidden',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        
+        elevation: 3,
+    },
+    icon_input : {
+        position : 'absolute',
+        zIndex : 2,
+        top : _heightScale(18),
+        left : _widthScale(10)
+    },
+    input : {
+        width : '100%',
+        height : '100%',
+        backgroundColor : COLOR.WHITE,
+        paddingHorizontal : _widthScale(10),
+        paddingLeft : _widthScale(40),
+        alignItems : 'center',
+        color : COLOR.MAIN_COLOR,
+    },
+    wrapBtnLogin : {
+        marginTop : _heightScale(10)
+    },
+    wrap_login_social : {
+        marginTop : _heightScale(30),
+        flexDirection : 'row',
+        width : '100%',
+        justifyContent : 'space-between'
+    },
+    btn_social : {
+        width : '100%',
+        height : _heightScale(55),
+        justifyContent : 'center',
+        alignItems : 'center',
+        borderRadius : 20,
+        flexDirection : 'row'
+    },
+    txt_social : {
+        color : COLOR.WHITE,
+        marginLeft : _widthScale(5),
+        fontSize : _heightScale(18)
+    },
+
     wrapTitle : {
         paddingHorizontal : _widthScale(18),
         flexDirection : 'row',
@@ -324,9 +497,6 @@ const style = StyleSheet.create({
         right : 0,
         top : _heightScale(10)
     },
-    wrapBtnLogin : {
-        marginTop : _heightScale(50)
-    },
     wrapLine : {
         flexDirection : 'row',
         justifyContent : 'center',
@@ -362,10 +532,10 @@ const style = StyleSheet.create({
         justifyContent  : 'center',
         alignContent : 'center',
         flexDirection : 'row',
-        marginTop : _heightScale(30),
+        marginTop : _heightScale(50),
     },
     txtThongBao : {
-        fontSize : _heightScale(20),
+        fontSize : _heightScale(18),
         color : COLOR.TEXT_BLACK,
     }
 })

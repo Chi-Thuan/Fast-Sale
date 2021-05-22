@@ -39,6 +39,7 @@ const images = {
     //LOGIN
     ICON_GOOGLE : require('./Login/icon_google.png'),
     ICON_FACEBOOK : require('./Login/icon_fb.png'),
+    LOGIN_ICON_APP : require('./Login/web_hi_res_512.png'),
 }
 
 export default images

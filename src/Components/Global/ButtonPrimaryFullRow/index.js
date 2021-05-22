@@ -8,6 +8,7 @@ import {
 
 import * as COLOR from '../../../Constant/Color/index'
 import { _heightScale } from '../../../Constant/Constants'
+import * as _font from '../../../Constant/Font'
 
 class ButtonPrimaryFullRow extends Component {
     render () {
@@ -20,7 +21,7 @@ class ButtonPrimaryFullRow extends Component {
                 onPress={chooseAccept}
                 >
                 <View style={style.container}>
-                    <Text style={[style.title]}>
+                    <Text style={[_font.stylesFont.fontDinTextPro , style.title]}>
                         {txtTitle}
                     </Text>
                 </View>
@@ -32,7 +33,7 @@ class ButtonPrimaryFullRow extends Component {
 const style = StyleSheet.create({
     container : {
         width : '100%',
-        height : _heightScale(50),
+        height : _heightScale(55),
         justifyContent : 'center',
         alignItems : 'center',
         backgroundColor : COLOR.MAIN_COLOR,
@@ -40,8 +41,8 @@ const style = StyleSheet.create({
     },
     title : {
         color : COLOR.WHITE,
-        fontSize : _heightScale(20),
-        fontWeight : 'bold'
+        fontSize : _heightScale(22),
+        textTransform : 'uppercase'
     }
 })
 
