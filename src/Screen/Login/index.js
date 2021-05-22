@@ -27,6 +27,7 @@ import * as _font from '../../Constant/Font'
 import ModalOnlyOK from '../../Components/Modal/ModalOnlyOK/index'
 import ModalOnlyOkAction from '../../Components/Modal/ModalOnlyOkAction/index'
 import { SkypeIndicator } from 'react-native-indicators';
+import { validateEmail  } from '../../Utils/utils'
 
 class Login extends Component {
 
@@ -38,7 +39,8 @@ class Login extends Component {
             isModalWrongPass : false,
             isModalNotExist : false,
             isDoneLogin : false,
-            isLoading : false
+            isLoading : false,
+            isErrorEmail : false
         }
     }
 
@@ -145,6 +147,10 @@ class Login extends Component {
         this.setState({ isDoneLogin : !this.state.isDoneLogin })
     }
 
+    _openModalErrorMail = () => {
+        this.setState({ isErrorEmail : !this.state.isErrorEmail })
+    }
+
     _handleNavigateLogin = () => {
         const check_conditionNavigate = this.props.route.params
         if(check_conditionNavigate) {
@@ -160,32 +166,36 @@ class Login extends Component {
         if(!txtEmail || !txtPassword) {
             this._openModalEmptyInput()
         }else{
-            const infoAccount = {
-                email : txtEmail,
-                password : txtPassword
-            }
-            this.setState({ isLoading : true })
-            const result = await loginAccount(infoAccount)
-            if(!result.error) {
-                this.setState({ isLoading : false })
-                const { infoUser } = result
-                await AsyncStorage.setItem('userLogin', JSON.stringify(infoUser))
-                this._openModalDoneLogin()
+            if(validateEmail(txtEmail)){
+                const infoAccount = {
+                    email : txtEmail,
+                    password : txtPassword
+                }
+                this.setState({ isLoading : true })
+                const result = await loginAccount(infoAccount)
+                if(!result.error) {
+                    this.setState({ isLoading : false })
+                    const { infoUser } = result
+                    await AsyncStorage.setItem('userLogin', JSON.stringify(infoUser))
+                    this._openModalDoneLogin()
+                }else{
+                    this.setState({ isLoading : false })
+                    if(result.isNull) {
+                        this._openModalNotExistAccount()
+                    }
+                    if(result.isWrongPass) {
+                        this._openModalWrongPass()
+                    }
+                }
             }else{
-                this.setState({ isLoading : false })
-                if(result.isNull) {
-                    this._openModalNotExistAccount()
-                }
-                if(result.isWrongPass) {
-                    this._openModalWrongPass()
-                }
+                this._openModalErrorMail()
             }
         }
     }
 
     render() {
 
-        const { isShowPass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading } = this.state
+        const { isShowPass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading, isErrorEmail } = this.state
 
         return(
             <>
@@ -217,6 +227,13 @@ class Login extends Component {
                     content="Đăng nhập thành công"
                     icon={IMAGES.LOGIN_ICON_DONE}
                     chooseAccept={this._handleNavigateLogin}
+                />
+
+                <ModalOnlyOK 
+                    isVisible = {isErrorEmail}
+                    closeModal = { this._openModalErrorMail }
+                    content="Sai định dạng Email"
+                    icon={IMAGES.LOGIN_ICON_WRONG_PASS}
                 />
                 
 

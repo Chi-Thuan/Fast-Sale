@@ -25,8 +25,8 @@ class ModalOnlyOK extends Component {
         const { isVisible, closeModal, icon, content } = this.props
         return (
             <Modal
-                animationInTiming={350}
-                animationOutTiming={350}
+                animationInTiming={320}
+                animationOutTiming={320}
                 animationIn='zoomIn'
                 animationOut='zoomOut'
                 useNativeDriver={true}

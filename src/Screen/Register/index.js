@@ -27,6 +27,7 @@ import * as _font from '../../Constant/Font'
 import ModalOnlyOK from '../../Components/Modal/ModalOnlyOK/index'
 import ModalOnlyOkAction from '../../Components/Modal/ModalOnlyOkAction/index'
 import { SkypeIndicator } from 'react-native-indicators';
+import { validateEmail  } from '../../Utils/utils'
 
 
 class ScreenRegister extends Component {
@@ -40,7 +41,8 @@ class ScreenRegister extends Component {
             isModalWrongPass : false,
             isModalNotExist : false,
             isDoneLogin : false,
-            isLoading : false
+            isLoading : false,
+            isErrorEmail : false
         }
     }
 
@@ -62,26 +64,30 @@ class ScreenRegister extends Component {
                 this._openModalWrongPass()
             }else{
 
-                let data = {
-                    email : txtEmail ,
-                    password : txtPassword,
-                    fullname : txtFullName
-                }
-                this.setState({ isLoading : true })
-                const result = await registerAccount(data)
-                if(!result.error) {
-                    const { infoUser } = result
-                    this.setState({ isLoading : false })
-                    await AsyncStorage.setItem('userLogin', JSON.stringify(infoUser))
-                    this._openModalDoneLogin()
-                }else{
-                    this.setState({ isLoading : false })
-                    if(result.isExist) {
-                        this._openModalNotExistAccount()
-                    }else{
-                        alert('Không thể đăng ký!')
+               if(validateEmail(txtEmail)){
+                    let data = {
+                        email : txtEmail ,
+                        password : txtPassword,
+                        fullname : txtFullName
                     }
-                }
+                    this.setState({ isLoading : true })
+                    const result = await registerAccount(data)
+                    if(!result.error) {
+                        const { infoUser } = result
+                        this.setState({ isLoading : false })
+                        await AsyncStorage.setItem('userLogin', JSON.stringify(infoUser))
+                        this._openModalDoneLogin()
+                    }else{
+                        this.setState({ isLoading : false })
+                        if(result.isExist) {
+                            this._openModalNotExistAccount()
+                        }else{
+                            alert('Không thể đăng ký!')
+                        }
+                    }
+               }else{
+                    this._openModalErrorMail()
+               }
             }
         }
     }
@@ -106,8 +112,12 @@ class ScreenRegister extends Component {
         this.props.navigation.replace(ScreenKey.SCREEN_TAB_BOTTOM, { screen : ScreenKey.ACCOUNT })
     }
 
+    _openModalErrorMail = () => {
+        this.setState({ isErrorEmail : !this.state.isErrorEmail })
+    }
+
     render() {
-        const { isShowPass, isShowRePass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading  } = this.state
+        const { isShowPass, isShowRePass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading, isErrorEmail  } = this.state
         return(
           <>
 
@@ -138,6 +148,13 @@ class ScreenRegister extends Component {
                     content="Đăng ký thành công!"
                     icon={IMAGES.LOGIN_ICON_DONE}
                     chooseAccept={this._handleNavigate}
+                />
+
+                <ModalOnlyOK 
+                    isVisible = {isErrorEmail}
+                    closeModal = { this._openModalErrorMail }
+                    content="Sai định dạng Email"
+                    icon={IMAGES.LOGIN_ICON_WRONG_PASS}
                 />
 
            <View style={style.container}>
