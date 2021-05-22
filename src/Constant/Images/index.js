@@ -34,6 +34,7 @@ const images = {
 
     //MODAL
     ICON_CLOSE_X : require('./Modal/cancel.png'),
+    MODAL_ICON_ERROR : require('./Modal/error_login.png'),
 
     //LOGIN
     ICON_GOOGLE : require('./Login/icon_google.png'),

@@ -12,6 +12,7 @@ import ListCartItem from '../../Components/Cart/ListCartItem/index'
 import * as ScreenKey from '../../Constant/ScreenKey'
 import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
 import ComponentLoading from '../../Components/Loading/index'
+import ModalMustLogin from '../../Components/Modal/ModalMustLogin/index'
 
 class Cart extends Component {
 
@@ -22,7 +23,8 @@ class Cart extends Component {
             isLoadInfoAddToCart : false,
             dataAddToCart : {},
             listCart : [],
-            priceTotal : 0
+            priceTotal : 0,
+            isErrorLogin : false
         }
     }
 
@@ -74,21 +76,30 @@ class Cart extends Component {
         this.setState({ isAddToCart : false })
     }
 
+    openPopupErrorLogin = () => {
+        this.setState({ isErrorLogin : true })
+    }
+
+    closePopupErrorLogin = () => {
+        this.setState({ isErrorLogin : false })
+    }
+
+    _handleNavigateLogin = () => {
+        this.closePopupErrorLogin()
+        const { navigation } = this.props
+        navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN, params : {
+            // Đăng nhập xong navigate qua thanh toán
+            conditionNavigate : {
+                screen : ScreenKey.CHECKOUT
+            }
+        }})  
+    }
+
     __navigateCheckout =  async () => {
         const { navigation } = this.props
         const userLogin = await AsyncStorage.getItem('userLogin')
         if(!userLogin) {
-            Alert.alert("Thông báo", "Bạn phải đăng nhập để sử dụng tính năng này!", [
-                { text : "Hủy" },
-                { text : 'Đăng nhập',  onPress : () => {
-                    navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN, params : {
-                        // Đăng nhập xong navigate qua thanh toán
-                        conditionNavigate : {
-                            screen : ScreenKey.CHECKOUT
-                        }
-                    }})  
-                }}
-            ])
+            this.openPopupErrorLogin()
         }else{
             navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.CHECKOUT })  
         }
@@ -120,6 +131,12 @@ class Cart extends Component {
 
         return(
             <View style={style.container}>
+
+                <ModalMustLogin 
+                    isVisible={this.state.isErrorLogin} 
+                    closeModal={this.closePopupErrorLogin}
+                    actionAccept={this._handleNavigateLogin}
+                    /> 
 
                 <ModalAddToCart 
                     openModal={this.state.isAddToCart}

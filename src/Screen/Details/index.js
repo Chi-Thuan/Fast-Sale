@@ -3,7 +3,8 @@ import {
     View, 
     Text, 
     StyleSheet, 
-    ActivityIndicator
+    ActivityIndicator,
+    TouchableOpacity
 } from 'react-native'
 
 import { _widthScale, _heightScale, BASE_URL } from '../../Constant/Constants'
@@ -63,7 +64,19 @@ class Details extends Component {
                 {/* BODY DETAILS */}
                 <BodyDetails item= { data } navigation={navigation} />
                 {/* BUTTON MUA NGAY */}
-                <View>
+                <View style={style.wrap_button_buynow}>
+                    <TouchableOpacity style={{ flex : 2 }}>
+                        <View style={style.btn_mua_ngay}>
+                            <Text style={[style.txtMuangay]}>Mua ngay</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flex : 1 }} >
+                        <View style={style.wrap_add_to_card}>
+                            <Text style={[style.wrap_txt_add_to_card]}>
+                                Thêm giỏ hàng
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -99,6 +112,56 @@ const style = StyleSheet.create({
         color : COLOR.MAIN_COLOR,
         fontWeight : 'bold',
         marginLeft : _widthScale(20)
+    },
+    wrap_button_buynow : {
+        bottom : 0 ,
+        width : '100%',
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        borderTopLeftRadius : _widthScale(10),
+        borderTopRightRadius : _widthScale(10),
+        overflow : 'hidden',
+        // paddingHorizontal : _widthScale(18),
+        alignItems : 'center',
+        backgroundColor : COLOR.WHITE,
+        height : _heightScale(55),
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.36,
+        shadowRadius: 6.68,
+
+        elevation: 11,
+    },
+    btn_mua_ngay : {
+        padding  : _heightScale(10),
+        backgroundColor : COLOR.MAIN_COLOR,
+        width : '100%',
+        height : '100%',
+        justifyContent : 'center',
+        alignItems : 'center'
+    },
+    txtMuangay : {
+        color : COLOR.WHITE,
+        fontSize : _heightScale(16),
+        textTransform : 'uppercase',
+        fontWeight : 'bold'
+    },
+    wrap_add_to_card : {
+        padding  : _heightScale(10),
+        backgroundColor : COLOR.TEXT_GREY,
+        width : '100%',
+        height : '100%',
+        justifyContent : 'center',
+        alignItems : 'center'
+    },
+    wrap_txt_add_to_card : {
+        color : COLOR.WHITE,
+        fontSize : _heightScale(16),
+        textTransform : 'uppercase',
+        fontWeight : 'bold'
     }
 })
 
