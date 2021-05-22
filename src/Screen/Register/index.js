@@ -6,7 +6,8 @@ import {
     TextInput,
     TouchableOpacity,
     Image,
-    Alert
+    Alert,
+    ScrollView
  } from 'react-native'
 
 import AsyncStorage  from '@react-native-async-storage/async-storage'
@@ -22,6 +23,10 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import { registerAccount } from '../../Services/api'
+import * as _font from '../../Constant/Font'
+import ModalOnlyOK from '../../Components/Modal/ModalOnlyOK/index'
+import ModalOnlyOkAction from '../../Components/Modal/ModalOnlyOkAction/index'
+import { SkypeIndicator } from 'react-native-indicators';
 
 
 class ScreenRegister extends Component {
@@ -30,7 +35,12 @@ class ScreenRegister extends Component {
         super()
         this.state = {
             isShowPass : false,
-            isShowRePass : false
+            isShowRePass : false,
+            isEmptyInput : true,
+            isModalWrongPass : false,
+            isModalNotExist : false,
+            isDoneLogin : false,
+            isLoading : false
         }
     }
 
@@ -46,10 +56,10 @@ class ScreenRegister extends Component {
     __handleRegister = async () => {
         const { txtFullName, txtEmail, txtPassword, txtRePassword } = this.state
         if(!txtFullName || !txtEmail || !txtPassword || !txtRePassword) {
-            alert('Vui lòng điền đầy đủ thông tin!')
+            this._openModalEmptyInput()
         }else{
             if(txtPassword !== txtRePassword) {
-                alert('Mật khẩu không trùng khớp!')
+                this._openModalWrongPass()
             }else{
 
                 let data = {
@@ -57,22 +67,17 @@ class ScreenRegister extends Component {
                     password : txtPassword,
                     fullname : txtFullName
                 }
-
+                this.setState({ isLoading : true })
                 const result = await registerAccount(data)
                 if(!result.error) {
                     const { infoUser } = result
+                    this.setState({ isLoading : false })
                     await AsyncStorage.setItem('userLogin', JSON.stringify(infoUser))
-                    Alert.alert(
-                        "Thông báo",
-                        "Tạo tài khoản thành công!",
-                        [{
-                            text: "Đồng ý",
-                            onPress: () => this.props.navigation.replace(ScreenKey.SCREEN_TAB_BOTTOM, { screen : ScreenKey.ACCOUNT }),
-                        }]
-                      );
+                    this._openModalDoneLogin()
                 }else{
+                    this.setState({ isLoading : false })
                     if(result.isExist) {
-                        alert('Tài khoản đã tồn tại!')
+                        this._openModalNotExistAccount()
                     }else{
                         alert('Không thể đăng ký!')
                     }
@@ -81,102 +86,183 @@ class ScreenRegister extends Component {
         }
     }
 
+    _openModalEmptyInput = () => {
+        this.setState({ isEmptyInput : !this.state.isEmptyInput })
+    }
+
+    _openModalWrongPass = () => {
+        this.setState({ isModalWrongPass : !this.state.isModalWrongPass })
+    }
+
+    _openModalNotExistAccount = () => {
+        this.setState({ isModalNotExist : !this.state.isModalNotExist })
+    }
+
+    _openModalDoneLogin = () => {
+        this.setState({ isDoneLogin : !this.state.isDoneLogin })
+    }
+
+    _handleNavigate = () => {
+        this.props.navigation.replace(ScreenKey.SCREEN_TAB_BOTTOM, { screen : ScreenKey.ACCOUNT })
+    }
+
     render() {
-        const { isShowPass, isShowRePass } = this.state
+        const { isShowPass, isShowRePass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading  } = this.state
         return(
-            <View style={style.container}>
-                <View style={[style.wrapTitle]}>
-                    <ButtonBack goBack={() => this.props.navigation.goBack()} />
-                    <Text style={style.title}>
-                            Đăng ký
-                    </Text>
-                </View>
-                <View style={style.wrapBody}>
-                    <View style={[style.wrapInput]}>
-                        <Text
-                            style={[style.titleInput]}>
-                            Họ tên
-                        </Text>
-                        <TextInput
-                            autoCapitalize='words'
-                            onChangeText={(e) => { this.setState({ txtFullName : e }) }}
-                            // onChangeText={(e) => {this.setState({ txtFullName : e }), function() { console.log('csacnjsdb   ', this.state.txtFullName) }}}
-                            style={[style.txtInput]}
-                        />
-                    </View>
+          <>
 
-                    <View style={[style.wrapInput, { marginTop : _heightScale(30) }]}>
-                        <Text
-                            style={[style.titleInput]}>
-                            Email
-                        </Text>
-                        <TextInput
-                            onChangeText={(e) => {this.setState({ txtEmail : e })}}
-                            keyboardType='email-address'
-                            style={[style.txtInput]}
-                        />
-                    </View>
+                <ModalOnlyOK 
+                    isVisible = {!isEmptyInput}
+                    closeModal = { this._openModalEmptyInput }
+                    content="Vui lòng nhập đầy đủ thông tin!"
+                    icon={IMAGES.LOGIN_ICON_NULL_INPUT}
+                />
 
-                    <View style={[style.wrapInput, { marginTop : _heightScale(30) }]}>
-                        <Text
-                            style={[style.titleInput]}>
-                            Mật khẩu
-                        </Text>
-                        <View style={style.wrap_pass}>
-                            <TextInput
-                                    onChangeText={(e) => {this.setState({ txtPassword : e })}}
-                                    secureTextEntry={!isShowPass}
-                                    style={[style.txtInput]}
-                                />
-                            <TouchableOpacity style={style.btn_showPass}
-                                activeOpacity={0.7}
-                                onPress={this.__handleShowPass}
+                <ModalOnlyOK 
+                    isVisible = {isModalWrongPass}
+                    closeModal = { this._openModalWrongPass }
+                    content="Mật khẩu không trùng khớp!"
+                    icon={IMAGES.LOGIN_ICON_WRONG_PASS}
+                />
+
+                <ModalOnlyOK 
+                    isVisible = {isModalNotExist}
+                    closeModal = { this._openModalNotExistAccount }
+                    content="Tài khoản đã tồn tại!"
+                    icon={IMAGES.LOGIN_ICON_EXIST}
+                />
+
+                <ModalOnlyOkAction 
+                    isVisible = {isDoneLogin}
+                    closeModal = { this._openModalDoneLogin }
+                    content="Đăng ký thành công!"
+                    icon={IMAGES.LOGIN_ICON_DONE}
+                    chooseAccept={this._handleNavigate}
+                />
+
+           <View style={style.container}>
+                        {
+                            isLoading ? <View style={style.wrap_indicator}>
+                                <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
+                            </View> : <View />
+                        }
+                        <ScrollView
+                            style={{ position : 'relative', zIndex : 9 }}
+                            showsVerticalScrollIndicator={false}
                             >
-                                {
-                                    isShowPass ? 
-                                        <Icon name="eye" size={_heightScale(26)} color={COLOR.MAIN_COLOR} />
-                                        :
-                                        <Icon name="eye-slash" size={_heightScale(26)} color={COLOR.MAIN_COLOR} />
-                                }
-                                
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={[style.wrapInput, { marginTop : _heightScale(30) }]}>
-                        <Text
-                            style={[style.titleInput]}>
-                            Nhập lại mật khẩu
-                        </Text>
-                        <View style={style.wrap_pass}>
-                            <TextInput
-                                onChangeText={(e) => {this.setState({ txtRePassword : e })}}
-                                secureTextEntry={!isShowRePass}
-                                    style={[style.txtInput]}
-                                />
-                            <TouchableOpacity style={style.btn_showPass}
-                                activeOpacity={0.7}
-                                onPress={this.__handleShowRePass}
-                            >
-                                {
-                                    isShowRePass ? 
-                                        <Icon name="eye" size={_heightScale(26)} color={COLOR.MAIN_COLOR} />
-                                        :
-                                        <Icon name="eye-slash" size={_heightScale(26)} color={COLOR.MAIN_COLOR} />
-                                }
-                                
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                            <View style={style.wrapBody_new}>
+                                <View style={style.wrap_avatar}>
+                                    <Image 
+                                        style={style.avatar}
+                                        source={IMAGES.LOGIN_ICON_APP}
+                                    />
+                                </View>
 
-                    <View style={style.wrapBtnLogin}>
-                        <ButtonPrimaryFullRow 
-                            chooseAccept={this.__handleRegister}
-                            txtTitle="Đăng ký"
-                        />
+                                <View style={style.wrap_input}>
+                                    <Text style={[_font.stylesFont.fontNolanBold ,style.title_input]}>
+                                        Đăng ký
+                                    </Text>
+                                    <View style={style.input_item}>
+                                        <View style={style.icon_input}>
+                                            <Icon name="user" size={_heightScale(24)}  color={COLOR.MAIN_COLOR} />
+                                        </View>
+                                        <TextInput
+                                            autoCapitalize='words'
+                                            onChangeText={(e) => { this.setState({ txtFullName : e }) }}
+                                            placeholder="Nhập họ tên"
+                                            style={[_font.stylesFont.fontNolan500, style.input]}
+                                            />
+                                    </View>
+                                    <View style={style.input_item}>
+                                        <View style={style.icon_input}>
+                                            <Icon name="envelope" size={_heightScale(22)}  color={COLOR.MAIN_COLOR} />
+                                        </View>
+                                        <TextInput
+                                            autoCapitalize='none'
+                                            keyboardType='email-address'
+                                            placeholder="Nhập Email"
+                                            onChangeText={(e) => {this.setState({ txtEmail : e })}}
+                                            style={[_font.stylesFont.fontNolan500, style.input]}
+                                            />
+                                    </View>
+                                    <View style={style.input_item}>
+                                        <View style={style.icon_input}>
+                                            <Icon name="lock" size={_heightScale(28)}  color={COLOR.MAIN_COLOR} />
+                                        </View>
+                                        <TextInput
+                                            autoCapitalize='none'
+                                            placeholder="Nhập mật khẩu"
+                                            secureTextEntry={!isShowPass}
+                                            onChangeText={(e) => {this.setState({ txtPassword : e })}}
+                                            style={[_font.stylesFont.fontNolan500, style.input]}
+                                            />
+                                              <TouchableOpacity 
+                                            activeOpacity={0.7}
+                                            onPress={this.__handleShowPass}
+                                            style={[{position : 'absolute',right : _widthScale(0), top : _heightScale(0), height : '100%', width : _widthScale(40),  alignItems : 'center' ,justifyContent : 'center'} ]}
+                                            >
+                                            {
+                                                isShowPass ? 
+                                                    <Icon name="eye" size={_heightScale(22)} color={COLOR.TEXT_GREY} />
+                                                    :
+                                                    <Icon name="eye-slash" size={_heightScale(22)} color={COLOR.TEXT_GREY} />
+                                            }
+                                        </TouchableOpacity>
+                                            
+                                    </View>
+                                    <View style={style.input_item}>
+                                        <View style={[style.icon_input, {left : _widthScale(12), top : _heightScale(15)}]}>
+                                            <Icon name="lock" size={_heightScale(28)} color={COLOR.MAIN_COLOR} />
+                                        </View>
+                                        <TextInput 
+                                            autoCapitalize='none'
+                                            secureTextEntry={!isShowRePass}
+                                            onChangeText={(e) => {this.setState({ txtRePassword : e })}}
+                                            secureTextEntry={!isShowRePass}
+                                            placeholder="Nhập lại mật khẩu"  
+                                            style={[_font.stylesFont.fontNolan500, style.input]}
+                                            />
+                                        <TouchableOpacity 
+                                            activeOpacity={0.7}
+                                            onPress={this.__handleShowRePass}
+                                            style={[{position : 'absolute',right : _widthScale(0), top : _heightScale(0), height : '100%', width : _widthScale(40),  alignItems : 'center' ,justifyContent : 'center'} ]}
+                                            >
+                                            {
+                                                isShowRePass ? 
+                                                    <Icon name="eye" size={_heightScale(22)} color={COLOR.TEXT_GREY} />
+                                                    :
+                                                    <Icon name="eye-slash" size={_heightScale(22)} color={COLOR.TEXT_GREY} />
+                                            }
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={style.wrapBtnLogin}>
+                                        <ButtonPrimaryFullRow 
+                                            chooseAccept={this.__handleRegister}
+                                            txtTitle="Đăng nhập"
+                                        />
+                                    </View>
+
+                                    <View style={style.wrapThongBao}>
+                                        <Text  style={[_font.stylesFont.fontDinTextPro, style.txtThongBao]}>
+                                            Nễu đã có tài khoản, vui lòng 
+                                        </Text>
+                                        <TouchableOpacity
+                                            activeOpacity={0.7}
+                                            onPress={() => { this.props.navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN }) }}
+                                            >
+                                                <Text style={{ fontSize : _heightScale(20), color : COLOR.MAIN_COLOR, textDecorationLine : 'underline', fontWeight : 'bold' }}>
+                                                    {` Đăng nhập `}
+                                                </Text>
+                                            </TouchableOpacity>
+                                    </View>
+                                </View>
+
+
+                            </View>
+                        </ScrollView>
+                    
                     </View>
-                
-                </View>
-        </View>
+          </>   
         )
     }
 }
@@ -184,90 +270,104 @@ class ScreenRegister extends Component {
 const style = StyleSheet.create({
     container : {
         flex : 1,
-        backgroundColor  : COLOR.WHITE
+        backgroundColor  : COLOR.WHITE,
+        position : 'relative'
     },
-    wrapTitle : {
-        paddingHorizontal : _widthScale(18),
-        flexDirection : 'row',
+    wrap_indicator : {
+        width : '100%',
+        height : '100%',
+        position : 'absolute',
+        zIndex : 10,
+        backgroundColor : COLOR.RGBA_02,
+        justifyContent : 'center',
+        alignItems : 'center'
+    },
+    wrapBody_new : {
         alignItems : 'center',
-        height : _heightScale(70),
+        paddingTop : _heightScale(50)
+    },
+    wrap_avatar : {
+        width : _heightScale(100),
+        borderRadius : 5,
+        overflow : 'hidden',
         backgroundColor : COLOR.WHITE,
         shadowColor: "#000",
         shadowOffset: {
-          width: 0,
-          height: 7,
+            width: 0,
+            height: 1,
         },
-        shadowOpacity: 0.43,
-        shadowRadius: 9.51,
-        elevation: 15,
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        
+        elevation: 3,
     },
-    title : {
-        fontSize : _heightScale(24),
-        color : COLOR.MAIN_COLOR,
-        fontWeight : 'bold',
-        marginLeft : _widthScale(15)
+    avatar : {
+        width : _heightScale(100),
+        height : _heightScale(100),
+        resizeMode : 'contain'
     },
-    wrapBody : {
+    wrap_input : {
+        width : '100%',
         paddingHorizontal : _widthScale(18),
-        flex : 1,
         marginTop : _heightScale(40)
     },
-    wrapInput : {
-        width : '100%',
-    },
-    titleInput : {
-        fontSize : _heightScale(16),
-        fontWeight : 'bold',
+    title_input : {
+        fontSize : _heightScale(24),
+        marginBottom : _heightScale(20),
         color : COLOR.MAIN_COLOR
     },
-    txtInput : {
+    input_item : {
+        marginBottom : _heightScale(30),
+        position : 'relative',
         width : '100%',
-        height : _heightScale(45),
-        borderBottomWidth : 1,
-        borderColor : COLOR.MAIN_COLOR,
-        fontSize : _heightScale(18),
-        color : COLOR.TEXT_BLACK,
+        height : _heightScale(60),
+        borderRadius : 5,
+        overflow : 'hidden',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3,
     },
-    wrap_pass : {
-        position : 'relative'
-    },
-    btn_showPass : {
+    icon_input : {
         position : 'absolute',
         zIndex : 2,
-        right : 0,
-        top : _heightScale(10)
+        top : _heightScale(18),
+        left : _widthScale(10)
+    },
+    input : {
+        width : '100%',
+        height : '100%',
+        backgroundColor : COLOR.WHITE,
+        paddingHorizontal : _widthScale(10),
+        paddingLeft : _widthScale(40),
+        alignItems : 'center',
+        color : COLOR.MAIN_COLOR,
     },
     wrapBtnLogin : {
-        marginTop : _heightScale(50)
+        marginTop : _heightScale(10)
     },
-    wrapLine : {
+    wrap_login_social : {
+        marginTop : _heightScale(30),
         flexDirection : 'row',
+        width : '100%',
+        justifyContent : 'space-between'
+    },
+    btn_social : {
+        width : '100%',
+        height : _heightScale(55),
         justifyContent : 'center',
         alignItems : 'center',
-        marginTop : _heightScale(50),
-        paddingHorizontal : _widthScale(50)
+        borderRadius : 40,
+        flexDirection : 'row'
     },
-    line : {
-        flex : 1,
-        height : 2,
-        backgroundColor : COLOR.GREY,
-    },
-    titleOr : {
-        marginHorizontal : _widthScale(20),
-        justifyContent : 'center',
-        alignItems : 'center',
-        fontSize : _heightScale(18),
-        color : COLOR.TEXT_GREY
-    },
-    wrapSocial : {
-        marginTop : _heightScale(40),
-        flexDirection : 'row',
-        justifyContent : 'center',
-    },
-    iconSocial : {
-        marginHorizontal : _widthScale(30),
-        width : _heightScale(60),
-        height : _heightScale(60)
+    txt_social : {
+        color : COLOR.WHITE,
+        marginLeft : _widthScale(5),
+        fontSize : _heightScale(18)
     },
     wrapThongBao : {
         width : '100%',
@@ -275,10 +375,10 @@ const style = StyleSheet.create({
         justifyContent  : 'center',
         alignContent : 'center',
         flexDirection : 'row',
-        marginTop : _heightScale(30),
+        marginTop : _heightScale(50),
     },
     txtThongBao : {
-        fontSize : _heightScale(20),
+        fontSize : _heightScale(18),
         color : COLOR.TEXT_BLACK,
     }
 })
