@@ -21,6 +21,7 @@ import { getProductNew, getProductById } from '../../Services/api'
 import * as ScreenKey from '../../Constant/ScreenKey'
 import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
 import ComponentLoading from '../../Components/Loading/index'
+import ModalOnlyOK from '../../Components/Modal/ModalOnlyOK/index'
 
 class Home extends Component {
 
@@ -32,7 +33,7 @@ class Home extends Component {
             isLoading : true,
             isAddToCart : false,
             isLoadInfoAddToCart : false,
-            dataAddToCart : {}
+            dataAddToCart : {},
         }
     }
 
@@ -68,6 +69,7 @@ class Home extends Component {
     }
 
     render(){
+
         return(
             this.state.isLoading ?   
             <View style={{flex : 1, justifyContent : 'center',alignItems : 'center',backgroundColor : COLOR.WHITE}}>
@@ -75,8 +77,6 @@ class Home extends Component {
             </View>
             : 
             <View style={style.container}>
-
-            
 
             <ModalAddToCart 
                 openModal={this.state.isAddToCart}
@@ -324,10 +324,21 @@ export default Home
 
 class MyCarousel extends Component {
 
+    constructor() {
+        super()
+        this.state = {
+            isDangPhatTrien : false
+        }
+    }
+
+    __handleShowDangPhatTrien = () => {
+        this.setState({ isDangPhatTrien : !this.state.isDangPhatTrien })
+    }
+
     _renderItem = ({item, index}) => {
         return (
             <TouchableWithoutFeedback 
-                onPress={()=> {alert('oke')}}>
+                onPress={this.__handleShowDangPhatTrien}>
                     <View style={{ height : _heightScale(200), borderRadius : 10, overflow : 'hidden' }}>
                         <Image
                             style={{ width : '100%', height : '100%' }}
@@ -340,18 +351,27 @@ class MyCarousel extends Component {
     }
 
     render () {
-
+        const { isDangPhatTrien } = this.state
         const { data } = this.props
 
         return (
-            <Carousel
-            style={{ backgroundColor : 'green' }}
-              ref={(c) => { this._carousel = c; }}
-              data={data}
-              renderItem={this._renderItem}
-              sliderWidth={_widthScale(375)}
-              itemWidth={_widthScale(375) - _widthScale(36)}
-            />
+            <>
+               <ModalOnlyOK 
+                    isVisible = {isDangPhatTrien}
+                    closeModal = { this.__handleShowDangPhatTrien }
+                    content="Tính năng đang phát triển"
+                    icon={IMAGES.ICON_DANGPHATTRIEN}
+                />
+                <Carousel
+                    style={{ backgroundColor : 'green' }}
+                    ref={(c) => { this._carousel = c; }}
+                    data={data}
+                    renderItem={this._renderItem}
+                    sliderWidth={_widthScale(375)}
+                    itemWidth={_widthScale(375) - _widthScale(36)}
+                    />
+            </>
+           
         );
     }
 }

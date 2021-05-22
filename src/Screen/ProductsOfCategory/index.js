@@ -19,6 +19,7 @@ import ProductItem from '../../Components/Global/ProductItem/index'
 import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
 import ComponentLoading from '../../Components/Loading/index'
 import ButtonBack from '../../Components/Details/ButtonBack/index'
+import { SkypeIndicator } from 'react-native-indicators';
 
 class ProductsOfCategory extends Component {
 
@@ -103,67 +104,70 @@ class ProductsOfCategory extends Component {
         }
     
         return(
-            <View style={style.container}>
-
-            <ModalAddToCart 
-                openModal={this.state.isAddToCart}
-                closeModal={this._closeModalAddToCart}
-                data={this.state.dataAddToCart}
-            />
-            
-            <ComponentLoading isLoading={this.state.isLoadInfoAddToCart} />
-
-                {/* SEARCH */}
-                <View style={[style.wrapSearch]}>
-                    <View style={{ marginRight : _widthScale(10) }}>
-                        <ButtonBack goBack={() => this.props.navigation.goBack()} />
-                    </View>
-                    <Search navigation={this.props.navigation} />
-                </View>
-
-                <View style={[style.wrapAddress]}>
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={ () => this.props.navigation.goBack() }
-                        >
-                        <View style={[style.addressItem]}>
-                            <Image 
-                                style={[style.logo]}
-                                source={{ uri : BASE_URL + infoParentCategory.thumbnail }}
-                            />
-                            <View style={{ justifyContent : 'center' }}>
-                                <Text style={[style.txtAddress]}>
-                                    { infoParentCategory.name }
-                                </Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <Text style={{ fontWeight : 'bold' }}>
-                        /
-                    </Text>
-                    <View style={[style.addressItem]}>
-                        <Text style={[style.txtAddress]}>
-                            { infoSubCategory.name }
-                        </Text>
-                    </View>
-                </View>
-                
-                {/* BODY CATEGORY */}{
+            <>
+            {
                 isLoading ?   
-                    <View style={{flex : 1, justifyContent : 'center',alignItems : 'center' }}>
-                        <ActivityIndicator size="large" color={COLOR.MAIN_COLOR} />
-                    </View> :
-                    <View style={{alignItems : 'center'}}>
-                         <FlatList 
-                            showsVerticalScrollIndicator={false}
-                            numColumns={2}
-                            data={fromData(dataProduct, numColumns)}
-                            renderItem={_renderItem}
-                        />
-                    </View>
-               }
-            </View>
-        )
+                <View style={{flex : 1, justifyContent : 'center',alignItems : 'center' }}>
+                   <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
+                </View> :
+                  <View style={style.container}>
+
+                  <ModalAddToCart 
+                      openModal={this.state.isAddToCart}
+                      closeModal={this._closeModalAddToCart}
+                      data={this.state.dataAddToCart}
+                  />
+                  
+                  <ComponentLoading isLoading={this.state.isLoadInfoAddToCart} />
+      
+                      {/* SEARCH */}
+                      <View style={[style.wrapSearch]}>
+                          <View style={{ marginRight : _widthScale(10) }}>
+                              <ButtonBack goBack={() => this.props.navigation.goBack()} />
+                          </View>
+                          <Search navigation={this.props.navigation} />
+                      </View>
+      
+                      <View style={[style.wrapAddress]}>
+                          <TouchableOpacity
+                              activeOpacity={0.7}
+                              onPress={ () => this.props.navigation.goBack() }
+                              >
+                              <View style={[style.addressItem]}>
+                                  <Image 
+                                      style={[style.logo]}
+                                      source={{ uri : BASE_URL + infoParentCategory.thumbnail }}
+                                  />
+                                  <View style={{ justifyContent : 'center' }}>
+                                      <Text style={[style.txtAddress]}>
+                                          { infoParentCategory.name }
+                                      </Text>
+                                  </View>
+                              </View>
+                          </TouchableOpacity>
+                          <Text style={{ fontWeight : 'bold' }}>
+                              /
+                          </Text>
+                          <View style={[style.addressItem]}>
+                              <Text style={[style.txtAddress]}>
+                                  { infoSubCategory.name }
+                              </Text>
+                          </View>
+                      </View>
+      
+                      <View style={{alignItems : 'center'}}>
+                              <FlatList 
+                              showsVerticalScrollIndicator={false}
+                              numColumns={2}
+                              data={fromData(dataProduct, numColumns)}
+                              renderItem={_renderItem}
+                          />
+                      </View>
+                      
+                  </View>
+                }
+            </>
+          )
     }
    
 }

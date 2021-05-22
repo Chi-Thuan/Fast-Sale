@@ -14,6 +14,7 @@ import {
     getAllCategory,
     getSubCategoryById
  } from '../../Services/api'
+ import { SkypeIndicator } from 'react-native-indicators';
 
 class Category extends Component {
 
@@ -81,7 +82,7 @@ class Category extends Component {
             {
                 this.state.isLoading ?   
                 <View style={{flex : 1, justifyContent : 'center',alignItems : 'center' }}>
-                    <ActivityIndicator size="large" color={COLOR.MAIN_COLOR} />
+                   <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
                 </View>
                 :  
                 <View style={[style.wrapBody]}>

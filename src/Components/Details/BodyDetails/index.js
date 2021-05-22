@@ -19,13 +19,18 @@ import { likeProduct } from '../../../Services/api'
 import { dislikeProduct, checkIsLikeProduct } from '../../../Services/api'
 import HTML from "react-native-render-html";
 import * as _font from '../../../Constant/Font'
+import ModalToast from '../../../Components/Modal/ModalToast/index'
+import ModalMustLogin from '../../../Components/Modal/ModalMustLogin/index'
 
 class ButtonBack extends Component {
 
     constructor(props){
         super();
         this.state = {
-            isLike : false
+            isLike : false,
+            isShowToast : false,
+            contentToast : '',
+            isErrorLogin : false,
         }
     }
 
@@ -39,6 +44,20 @@ class ButtonBack extends Component {
         }
     }
 
+    openPopupErrorLogin = () => {
+        this.setState({ isErrorLogin : !this.state.isErrorLogin })
+    }
+
+    _handleShowToast = () => {
+        this.setState({  isShowToast : !this.state.isShowToast })
+    }
+
+    _handleNavigateLogin = () => {
+        this.openPopupErrorLogin()
+        const { navigation } = this.props
+        navigation.replace(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN})
+    }
+
     _handleLikeProduct = async () => {
 
         const { navigation, item } = this.props
@@ -49,18 +68,18 @@ class ButtonBack extends Component {
         if(UserLogin != null) {
             const result = await likeProduct(item._id)
             if(!result.result) {
-                this.setState({ isLike : true })
-                alert('Đã thêm vào danh sách yêu thích')
+                this.setState({ isLike : true, contentToast : 'Đã thêm vào danh sách yêu thích'},
+                function () {
+                    this._handleShowToast()
+                    setTimeout(() => {
+                        this._handleShowToast()
+                    }, 2000);
+                })
             }else{
                 alert(result.message)
             }
         }else{
-            Alert.alert("Thông báo", "Bạn phải đăng nhập để sử dụng tính năng này!", [
-                { text : "Hủy" },
-                { text : 'Đăng nhập',  onPress : () => {
-                    navigation.replace(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN})  
-                }}
-            ])
+            this.openPopupErrorLogin()
         }
     }
 
@@ -70,8 +89,13 @@ class ButtonBack extends Component {
         const { item } = this.props
         const result = await dislikeProduct(item._id)
         if(!result.error) {
-            this.setState({ isLike : false })
-            alert('Đã xóa khỏi danh sách yêu thích!')
+            this.setState({ isLike : false, contentToast : 'Đã xóa khỏi danh sách yêu thích!' },
+            function () {
+                this._handleShowToast()
+                setTimeout(() => {
+                    this._handleShowToast()
+                }, 2500);
+            })
         }else{
             alert(result.message)
         }
@@ -79,14 +103,29 @@ class ButtonBack extends Component {
 
     render(){
         
-        const { isLike } = this.state
+        const { isLike, isShowToast, contentToast, isErrorLogin } = this.state
         const { item } = this.props
         
         return (
+            <>
+            <ModalToast
+                content = {contentToast}
+                isVisible = {isShowToast}
+            />
+
+            <ModalMustLogin 
+                isVisible={isErrorLogin} 
+                closeModal={this.openPopupErrorLogin}
+                actionAccept={this._handleNavigateLogin}
+            /> 
+
+            
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 >
                <View style={[style.boxContainer]}>
+                    
+
                     {/* ẢNH ĐẠI DIỆN */}
                     <View style={[style.wrapAvatar]}>
                         <Image 
@@ -127,7 +166,9 @@ class ButtonBack extends Component {
                 </View>
 
             </ScrollView>
-        )
+       
+            </>
+             )
     }
 }
 
