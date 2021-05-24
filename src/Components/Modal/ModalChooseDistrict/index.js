@@ -34,6 +34,9 @@ class ModalChooseDistrict extends Component {
             province,
             currChoose_code : province.code 
         })
+        const { closeModal, actionChoose } = this.props
+        closeModal()
+        actionChoose(province)
     }
 
     __renderListDistrict = (parent_code) => {

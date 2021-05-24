@@ -30,10 +30,13 @@ class ModelChooseLocation extends Component {
     }
 
     __handleChooseLocation = province => {
+        const { closeModal, actionChoose } = this.props
         this.setState({ 
             province,
             currChoose_code : province.code 
         })
+        closeModal()
+        actionChoose(province)
     }
 
     __renderListProvinces = () => {

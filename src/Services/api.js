@@ -53,3 +53,7 @@ export const checkIsLikeProduct = _id => {
 export const getListFavoriteProduct = () => {
     return fetchApi(`/api/user/get-all-favorite-product`, {}, METHOD.GET)
 }
+
+export const checkout = info => {
+    return fetchApi('/api/user/checkout', info, METHOD.POST)
+}

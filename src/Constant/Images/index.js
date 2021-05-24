@@ -47,6 +47,12 @@ const images = {
     LOGIN_ICON_DONE : require('./Login/93.png'),
     LOGIN_BG : require('./Login/bg_login.jpg'),
     ICON_DANGPHATTRIEN : require('./Login/22.png'),
+
+    // CHECKOUT
+    ICON_ICON_CHECKOUT_DONE : require('./Cart/undraw_happy_announcement_ac67.png'),
+    ICON_CHECKOUT_TEXT_NULL : require('./Cart/undraw_Personal_text_re_vqj3.png'),
+    ICON_CHECKOUT_UPDATE : require('./Cart/undraw_upgrade_06a0.png'),
+
 }
 
 export default images
