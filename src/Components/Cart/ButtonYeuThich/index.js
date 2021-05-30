@@ -9,7 +9,6 @@ import {
 import { _heightScale, _widthScale } from '../../../Constant/Constants'
 import IMAGES from '../../../Constant/Images/index'
 import * as COLOR from '../../../Constant/Color/index'
-import * as ScreenKey from '../../../Constant/ScreenKey'
 
 class ButtonYeuThich extends Component {
     render() {

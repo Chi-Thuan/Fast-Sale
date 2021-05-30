@@ -3,18 +3,14 @@ import {
     View, 
     Text, 
     StyleSheet, 
-    ActivityIndicator,
     ScrollView,
     TouchableOpacity,
-    TextInput
 } from 'react-native'
 
 import { _widthScale, _heightScale, BASE_URL } from '../../../Constant/Constants'
 import * as COLOR from '../../../Constant/Color/index'
 import ButtonBack from '../../../Components/Details/ButtonBack/index'
-import ButtonYeuThich from '../../../Components/Cart/ButtonYeuThich/index'
-import BodyDetails from '../../../Components/Details/BodyDetails/index'
-import { getProductById, checkout } from '../../../Services/api'
+import { checkout } from '../../../Services/api'
 import { formatCurrencyVND, _convertToSlug } from '../../../Utils/utils'
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import ButtonPrimaryFullRow from '../../../Components/Global/ButtonPrimaryFullRow/index'

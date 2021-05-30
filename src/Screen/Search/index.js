@@ -2,23 +2,14 @@ import React ,{Component}from 'react'
 import { 
     View, 
     Text, 
-    ActivityIndicator,
     StyleSheet, 
     TextInput,
     TouchableOpacity,
     Image} from 'react-native'
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
-
-import Search from '../../Components/Category/Search/index'
-import CategoryItem from '../../Components/Category/CategoryItem/index'
-import DetailsCategory from '../../Components/Category/DetailsCategory/index'
-import { 
-    getAllCategory,
-    getSubCategoryById
- } from '../../Services/api'
- import IMAGES from '../../Constant/Images/index'
- import * as ScreenKey from '../../Constant/ScreenKey'
+import IMAGES from '../../Constant/Images/index'
+import * as ScreenKey from '../../Constant/ScreenKey'
 
 class ScreenSearch extends Component {
 

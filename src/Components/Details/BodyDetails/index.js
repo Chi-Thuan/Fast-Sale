@@ -6,7 +6,6 @@ import {
     Image, 
     ScrollView,
     TouchableWithoutFeedback,
-    Alert
 } from 'react-native'
 import { _heightScale, _widthScale, BASE_URL } from '../../../Constant/Constants'
 
@@ -21,6 +20,7 @@ import HTML from "react-native-render-html";
 import * as _font from '../../../Constant/Font'
 import ModalToast from '../../../Components/Modal/ModalToast/index'
 import ModalMustLogin from '../../../Components/Modal/ModalMustLogin/index'
+import { SkypeIndicator } from 'react-native-indicators';
 
 class ButtonBack extends Component {
 
@@ -31,15 +31,18 @@ class ButtonBack extends Component {
             isShowToast : false,
             contentToast : '',
             isErrorLogin : false,
+            isLoading : false
         }
     }
 
     async componentDidMount() {
+        this.setState({ isLoading : true })
         const { item } = this.props
         const infoLike = await checkIsLikeProduct(item._id)  
         if(!infoLike.error) {
-            this.setState({ isLike : true })
+            this.setState({ isLike : true, isLoading : false })
         }else{
+            this.setState({ isLoading : false })
             console.log('Lỗi không lấy được chi tiết sp : ',error)
         }
     }
@@ -73,7 +76,7 @@ class ButtonBack extends Component {
                     this._handleShowToast()
                     setTimeout(() => {
                         this._handleShowToast()
-                    }, 500);
+                    }, 10);
                 })
             }else{
                 alert(result.message)
@@ -94,7 +97,7 @@ class ButtonBack extends Component {
                 this._handleShowToast()
                 setTimeout(() => {
                     this._handleShowToast()
-                }, 500);
+                }, 10);
             })
         }else{
             alert(result.message)
@@ -103,7 +106,7 @@ class ButtonBack extends Component {
 
     render(){
         
-        const { isLike, isShowToast, contentToast, isErrorLogin } = this.state
+        const { isLike, isShowToast, contentToast, isErrorLogin, isLoading } = this.state
         const { item } = this.props
         
         return (
@@ -119,54 +122,61 @@ class ButtonBack extends Component {
                 actionAccept={this._handleNavigateLogin}
             /> 
 
-            
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                >
-               <View style={[style.boxContainer]}>
-                    
-
-                    {/* ẢNH ĐẠI DIỆN */}
-                    <View style={[style.wrapAvatar]}>
-                        <Image 
-                            style={[style.avatar]}
-                            source={{ uri : BASE_URL +item.thumbnail }}
-                        />
+                    {
+                    isLoading ?    
+                    <View style={{ flex : 1 }}>
+                        <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
                     </View>
-                    {/* GIÁ */}
-                    <View style={[style.wrapPrice]}>
-                        <Text style={[_font.stylesFont.fontFester500, style.txtPrice]}>
-                            { formatCurrencyVND(item.price) }
+                    :
+                    <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    >
+                   <View style={[style.boxContainer]}>
+                        
+    
+                        {/* ẢNH ĐẠI DIỆN */}
+                        <View style={[style.wrapAvatar]}>
+                            <Image 
+                                style={[style.avatar]}
+                                source={{ uri : BASE_URL +item.thumbnail }}
+                            />
+                        </View>
+                        {/* GIÁ */}
+                        <View style={[style.wrapPrice]}>
+                            <Text style={[_font.stylesFont.fontFester500, style.txtPrice]}>
+                                { formatCurrencyVND(item.price) }
+                            </Text>
+    
+                            <TouchableWithoutFeedback
+                                activeOpacity={0.7}
+                                onPress={isLike ? this._handleDisLikeProduct : this._handleLikeProduct}
+                            >
+                                <View style={[style.wrapBtnFavorite, isLike == false ? style.btnFavorite_Normal : style.btnFavorite_Active]}>
+                                    <Image 
+                                        style={[style.btnFavorite]}
+                                        source={IMAGES.ICON_FAVORITE}
+                                    />
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                        {/* TÊN SẢN PHẨM */}
+                        <Text style={[_font.stylesFont.fontNolanBold, style.nameProduct]}>
+                            {item.name}
                         </Text>
-
-                        <TouchableWithoutFeedback
-                            activeOpacity={0.7}
-                            onPress={isLike ? this._handleDisLikeProduct : this._handleLikeProduct}
-                        >
-                            <View style={[style.wrapBtnFavorite, isLike == false ? style.btnFavorite_Normal : style.btnFavorite_Active]}>
-                                <Image 
-                                    style={[style.btnFavorite]}
-                                    source={IMAGES.ICON_FAVORITE}
-                                />
-                            </View>
-                        </TouchableWithoutFeedback>
+                   </View>
+    
+                   <View style={[style.boxContainer2]}>
+                        <Text style={[style.titleBox]}>
+                            Chi tiết sản phẩm 
+                        </Text>
+                         <HTML source={{ html: `${item.description}` }}/>
+                       
                     </View>
-                    {/* TÊN SẢN PHẨM */}
-                    <Text style={[_font.stylesFont.fontNolanBold, style.nameProduct]}>
-                        {item.name}
-                    </Text>
-               </View>
-
-               <View style={[style.boxContainer2]}>
-                    <Text style={[style.titleBox]}>
-                        Chi tiết sản phẩm 
-                    </Text>
-                     <HTML source={{ html: `${item.description}` }}/>
-                   
-                </View>
-
-            </ScrollView>
-       
+    
+                </ScrollView>
+           
+                    }
+           
             </>
              )
     }

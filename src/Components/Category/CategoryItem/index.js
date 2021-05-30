@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import { _heightScale, _widthScale, BASE_URL } from '../../../Constant/Constants'
 import * as COLOR from '../../../Constant/Color/index'
-import IMAGES from '../../../Constant/Images/index'
 
 class CategoryItem extends Component {
 

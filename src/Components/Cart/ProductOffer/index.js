@@ -3,11 +3,9 @@ import {
     StyleSheet, 
     View, 
     Text,
-    ActivityIndicator
 } from 'react-native'
 import { _heightScale, _widthScale } from '../../../Constant/Constants'
 import * as COLOR from '../../../Constant/Color/index'
-import * as ScreenKey from '../../../Constant/ScreenKey'
 import ProductItem from '../../../Components/Global/ProductItem/index'
 import { getProductNew } from '../../../Services/api';
 import { SkypeIndicator } from 'react-native-indicators';

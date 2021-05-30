@@ -1,20 +1,14 @@
 import React, {Component} from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, ImagePropTypes, ScrollView, Alert } from 'react-native'
-import AsyncStorage  from '@react-native-async-storage/async-storage'
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native'
 
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
 import { dislikeProduct, getListFavoriteProduct } from '../../Services/api'
-import ButtonYeuThich from '../../Components/Cart/ButtonYeuThich/index'
-import EmptyCart from '../../Components/Cart/EmptyCart/index'
-import ProductOffer from '../../Components/Cart/ProductOffer/index'
-import ListCartItem from '../../Components/Cart/ListCartItem/index'
-import * as ScreenKey from '../../Constant/ScreenKey'
-import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
-import ComponentLoading from '../../Components/Loading/index'
 import ButtonBack from '../../Components/Details/ButtonBack/index'
 import CartFavoriteItem from '../../Components/Favorite/CartItem/index'
 import { SkypeIndicator } from 'react-native-indicators';
+import ModalConfirm from '../../Components/Modal/ModalConfirm/index'
+import IMAGES from '../../Constant/Images/index'
 
 class Cart extends Component {
 
@@ -22,7 +16,9 @@ class Cart extends Component {
         super()
         this.state = {
             listFavorite : [],
-            isLoading : false
+            isLoading : false,
+            isPopupRemove : false,
+            _idCartRemove : ''
         }
     }
 
@@ -36,33 +32,38 @@ class Cart extends Component {
         }
     }
 
-    _removeProductFavorite = async _id => {
+    __handleOpenPopupRemove = _id => {
+        this.setState({isPopupRemove : !this.state.isPopupRemove, _idCartRemove : _id})
+    }
 
-        Alert.alert("Thông báo", "Bạn có muốn xóa sản phẩm này ra khỏi danh sách yêu thích?", [
-            { text : "Không" },
-            { text : 'Có',  onPress : async () => {
-                const result = await dislikeProduct(_id)
-                if(!result.error) {
-                    alert('Đã xóa khỏi danh sách yêu thích!')
-                    // RELOAD
-                    const rs = await getListFavoriteProduct()
-                    if(!rs.error) {
-                        this.setState({ listFavorite : rs.data })
-                    }
-                }else{
-                    alert(result.message)
-                }
-            }}
-        ])
+    __handleRemove = async () => {
+        const { _idCartRemove } = this.state
+        const result = await dislikeProduct(_idCartRemove)
+        if(!result.error){
+            const rs = await getListFavoriteProduct()
+            if(!rs.error) {
+                this.setState({ listFavorite : rs.data, isPopupRemove : false })
+            }
+        }else{
+            alert(result.message)
+        }
     }
 
     render() {
 
-        const { listFavorite, isLoading } = this.state
+        const { listFavorite, isLoading, isPopupRemove } = this.state
         const { navigation } = this.props
 
         return(
             <View style={style.container}>
+
+                <ModalConfirm 
+                    icon={IMAGES.ICON_CART_TRASH}
+                    isVisible={isPopupRemove}
+                    content={"Bạn chắc muốn xóa sản phẩm ra khỏi danh sách yêu thích?"}
+                    closeModal={this.__handleOpenPopupRemove}
+                    actionAccept={this.__handleRemove}
+                />
 
                 <View style={[style.wrapTitle]}>
                     <ButtonBack goBack={() => navigation.goBack()} />
@@ -84,7 +85,7 @@ class Cart extends Component {
                         {
                             listFavorite.length > 0 ?
                             listFavorite.map((item, index) =>
-                            <CartFavoriteItem key={index} data={item} removeProduct={this._removeProductFavorite} navigation={navigation} /> 
+                            <CartFavoriteItem key={index} data={item} removeProduct={ ()=> this.__handleOpenPopupRemove(item._id)} navigation={navigation} /> 
                             )
                             :
                             <View style={style.wrap_title_empty}>

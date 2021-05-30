@@ -4,13 +4,10 @@ import {
     TouchableOpacity, 
     View, 
     Text,
-    Image,
     ScrollView,
 } from 'react-native'
 import { _heightScale, _widthScale } from '../../../Constant/Constants'
-import IMAGES from '../../../Constant/Images/index'
 import * as COLOR from '../../../Constant/Color/index'
-import * as ScreenKey from '../../../Constant/ScreenKey'
 import { formatCurrencyVND } from '../../../Utils/utils'
 import LinearGradient from 'react-native-linear-gradient';
 import CartItem from '../CartItem/index'

@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ImagePropTypes, ScrollView, Alert } from 'react-native'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
-import IMAGES from '../../Constant/Images/index'
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
 import { getProductById, getListFavoriteProduct } from '../../Services/api'

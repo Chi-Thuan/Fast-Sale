@@ -3,20 +3,15 @@ import {
     View,
     Text,
     StyleSheet,
-    Image,
     TouchableOpacity,
     TextInput,
     ScrollView
 } from 'react-native'
 import Modal from 'react-native-modal'
-import AsyncStorage  from '@react-native-async-storage/async-storage'
 
-import IMAGES from '../../../Constant/Images/index'
 import { _heightScale, _widthScale } from '../../../Constant/Constants'
 import * as COLOR from '../../../Constant/Color/index'
-import { BASE_URL } from '../../../Constant/Constants'
-import { formatCurrencyVND, _convertToSlug } from '../../../Utils/utils'
-import * as ScreenKey from '../../../Constant/ScreenKey'
+import { _convertToSlug } from '../../../Utils/utils'
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import PROVINCES from '../../../Constant/Location/Provinces'
 

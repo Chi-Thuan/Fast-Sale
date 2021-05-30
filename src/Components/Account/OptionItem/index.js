@@ -6,7 +6,7 @@ import {
     Text,
     Image,
 } from 'react-native'
-import { _widthScale, _heightScale, NAME_APP }  from '../../../Constant/Constants'
+import { _widthScale, _heightScale }  from '../../../Constant/Constants'
 import IMAGES from '../../../Constant/Images/index'
 import * as COLOR from '../../../Constant/Color/index'
 

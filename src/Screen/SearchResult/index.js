@@ -6,13 +6,10 @@ import {
     StyleSheet, 
     TouchableOpacity, 
     ScrollView,
-    ActivityIndicator,
     FlatList } from 'react-native'
-import { _widthScale, _heightScale, BASE_URL, WIDTH_DIMENSION }  from '../../Constant/Constants'
+import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
-import * as ScreenKey from '../../Constant/ScreenKey'
-import { getProductBySubCategory, getInfoCategory, getProductById, getProductNew, search } from '../../Services/api'
-import Search from '../../Components/Category/Search/index'
+import { getProductById, search } from '../../Services/api'
 import ProductItem from '../../Components/Global/ProductItem/index'
 import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
 import ComponentLoading from '../../Components/Loading/index'

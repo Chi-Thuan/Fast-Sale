@@ -6,13 +6,10 @@ import {
     StyleSheet, 
     TouchableOpacity, 
     ScrollView,
-    ActivityIndicator,
     FlatList,
-    Pressable 
  } from 'react-native'
 import { _widthScale, _heightScale, BASE_URL }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
-import * as ScreenKey from '../../Constant/ScreenKey'
 import { getProductBySubCategory, getInfoCategory, getProductById } from '../../Services/api'
 import Search from '../../Components/Category/Search/index'
 import ProductItem from '../../Components/Global/ProductItem/index'
@@ -155,14 +152,16 @@ class ProductsOfCategory extends Component {
                           </View>
                       </View>
       
-                      <View style={{alignItems : 'center'}}>
-                              <FlatList 
-                              showsVerticalScrollIndicator={false}
-                              numColumns={2}
-                              data={fromData(dataProduct, numColumns)}
-                              renderItem={_renderItem}
-                          />
-                      </View>
+                      <ScrollView showsVerticalScrollIndicator={false}>
+                        <View style={{alignItems : 'center'}}>
+                                <FlatList 
+                                showsVerticalScrollIndicator={false}
+                                numColumns={2}
+                                data={fromData(dataProduct, numColumns)}
+                                renderItem={_renderItem}
+                            />
+                        </View>
+                      </ScrollView>
                       
                   </View>
                 }

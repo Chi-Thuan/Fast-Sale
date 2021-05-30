@@ -5,10 +5,8 @@ import {
     View, 
     Text,
     Image,
-    Alert,
     TouchableWithoutFeedback
 } from 'react-native'
-import AsyncStorage  from '@react-native-async-storage/async-storage'
 
 import { BASE_URL } from '../../../Constant/Constants' 
 import { _heightScale, _widthScale } from '../../../Constant/Constants'
@@ -16,7 +14,6 @@ import IMAGES from '../../../Constant/Images/index'
 import * as COLOR from '../../../Constant/Color/index'
 import * as ScreenKey from '../../../Constant/ScreenKey'
 import { formatCurrencyVND } from '../../../Utils/utils'
-import ButtonYeuThich from '../../../Components/Cart/ButtonYeuThich/index'
 
 class CartItem extends Component {
 

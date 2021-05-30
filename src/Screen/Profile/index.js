@@ -3,19 +3,16 @@ import { View,
     Text, StyleSheet,
     StatusBar,
     Image, 
-    TouchableOpacity} from 'react-native'
+    } from 'react-native'
 import { StackActions } from '@react-navigation/native';
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
 
-import ButtonCart from '../../Components/Account/ButtonCart/index'
-import ScreenNotLogin from '../../Components/Account/ScreenNotLogin/index'
-import ScreenLogged from '../../Components/Account/ScreenLogged/index'
 import ButtonBack from '../../Components/Details/ButtonBack/index'
 import ButtonPrimaryFullRow from '../../Components/Global/ButtonPrimaryFullRow/index'
 import * as ScreenKey from '../../Constant/ScreenKey' 
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 class Profile extends Component {
 

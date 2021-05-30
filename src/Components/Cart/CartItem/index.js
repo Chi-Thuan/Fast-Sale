@@ -5,7 +5,6 @@ import {
     View, 
     Text,
     Image,
-    Alert,
 } from 'react-native'
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 

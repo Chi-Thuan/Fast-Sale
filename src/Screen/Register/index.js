@@ -6,7 +6,6 @@ import {
     TextInput,
     TouchableOpacity,
     Image,
-    Alert,
     ScrollView,
     ImageBackground
  } from 'react-native'
@@ -14,14 +13,9 @@ import {
 import AsyncStorage  from '@react-native-async-storage/async-storage'
 import { _widthScale, _heightScale } from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
-import ButtonBack from '../../Components/Details/ButtonBack/index'
 import ButtonPrimaryFullRow from '../../Components/Global/ButtonPrimaryFullRow/index'
 import IMAGES from '../../Constant/Images/index'
 import * as ScreenKey from '../../Constant/ScreenKey' 
-import PasswordInputText from 'react-native-hide-show-password-input';
-import auth from '@react-native-firebase/auth';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import { registerAccount } from '../../Services/api'
 import * as _font from '../../Constant/Font'

@@ -4,7 +4,6 @@ import AsyncStorage  from '@react-native-async-storage/async-storage'
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
 
-import ButtonCart from '../../Components/Account/ButtonCart/index'
 import ScreenNotLogin from '../../Components/Account/ScreenNotLogin/index'
 import ScreenLogged from '../../Components/Account/ScreenLogged/index'
 import { SkypeIndicator } from 'react-native-indicators';
