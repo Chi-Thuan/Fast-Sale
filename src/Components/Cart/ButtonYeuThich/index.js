@@ -14,7 +14,7 @@ import * as ScreenKey from '../../../Constant/ScreenKey'
 class ButtonYeuThich extends Component {
     render() {
 
-        const { navigateFavorite } = this.props
+        const { navigateFavorite, totalLike } = this.props
 
         return (
             <TouchableOpacity
@@ -27,7 +27,7 @@ class ButtonYeuThich extends Component {
                         source={IMAGES.ICON_LIST_FAVORITE}
                     />
                     <View style={[style.wrapTotal]}>
-                        <Text style={[style.total]}>0</Text>
+                        <Text style={[style.total]}>{totalLike}</Text>
                     </View>
                 </View>
             </TouchableOpacity>

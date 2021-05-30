@@ -4,7 +4,7 @@ import AsyncStorage  from '@react-native-async-storage/async-storage'
 import IMAGES from '../../Constant/Images/index'
 import { _widthScale, _heightScale }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
-import { getProductById } from '../../Services/api'
+import { getProductById, getListFavoriteProduct } from '../../Services/api'
 import ButtonYeuThich from '../../Components/Cart/ButtonYeuThich/index'
 import EmptyCart from '../../Components/Cart/EmptyCart/index'
 import ProductOffer from '../../Components/Cart/ProductOffer/index'
@@ -26,12 +26,23 @@ class Cart extends Component {
             listCart : [],
             priceTotal : 0,
             isErrorLogin : false,
-            isLoading : false
+            isLoading : false,
+            totalLike : 0
         }
     }
 
     async componentDidMount() {
         this.setState({ isLoading : true })
+      
+        // if(!rs.error) {
+        //     this.setState({ listFavorite : rs.data })
+        // }
+        // const rs = await getListFavoriteProduct()
+        const userLogin = await AsyncStorage.getItem('userLogin')
+        if(userLogin) {
+            const rs = await getListFavoriteProduct()
+            this.setState({ totalLike : rs.data.length })
+        }
         const cart = await AsyncStorage.getItem('cart')
         if(cart != null) {
             const getCart = JSON.parse(cart)
@@ -40,9 +51,9 @@ class Cart extends Component {
                 totalTemp += item.price * item.quantity
             });
             this.setState({ 
-                listCart : getCart ,
+                listCart : getCart,
                 priceTotal : totalTemp,
-                isLoading : false
+                isLoading : false,
             })
         }else{
             this.setState({ isLoading : false })
@@ -139,7 +150,7 @@ class Cart extends Component {
 
     render() {
 
-        const { listCart, priceTotal, isLoading } = this.state
+        const { listCart, priceTotal, isLoading, totalLike } = this.state
         const { navigation } = this.props
 
         return(
@@ -176,7 +187,7 @@ class Cart extends Component {
                         <Text style={style.title}>
                                 Giỏ hàng
                         </Text>
-                        <ButtonYeuThich navigateFavorite={this.__navigateFavorite} />
+                        <ButtonYeuThich totalLike={totalLike} navigateFavorite={this.__navigateFavorite} />
                     </View>
     
                     {

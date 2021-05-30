@@ -14,20 +14,25 @@ import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
 import ComponentLoading from '../../Components/Loading/index'
 import ButtonBack from '../../Components/Details/ButtonBack/index'
 import CartFavoriteItem from '../../Components/Favorite/CartItem/index'
+import { SkypeIndicator } from 'react-native-indicators';
 
 class Cart extends Component {
 
     constructor(){
         super()
         this.state = {
-            listFavorite : []
+            listFavorite : [],
+            isLoading : false
         }
     }
 
     async componentDidMount() {
+        this.setState({ isLoading : true })
         const rs = await getListFavoriteProduct()
         if(!rs.error) {
-            this.setState({ listFavorite : rs.data })
+            this.setState({ listFavorite : rs.data, isLoading : false })
+        }else{
+            this.setState({ isLoading : false })
         }
     }
 
@@ -53,7 +58,7 @@ class Cart extends Component {
 
     render() {
 
-        const { listFavorite } = this.state
+        const { listFavorite, isLoading } = this.state
         const { navigation } = this.props
 
         return(
@@ -67,8 +72,13 @@ class Cart extends Component {
                 </View>
 
                 <View style={[style.container2]}>
-                
-                <ScrollView 
+                {
+                    isLoading ?
+                    <View style={style.container}>
+                        <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
+                    </View>
+                    :
+                    <ScrollView 
                     showsVerticalScrollIndicator ={false}
                     style={[style.wrapListItem]}>
                         {
@@ -84,6 +94,8 @@ class Cart extends Component {
                             </View>
                         }
                 </ScrollView>
+                }
+                {/* */}
             </View> 
 
             </View>

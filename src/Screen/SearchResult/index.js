@@ -32,7 +32,10 @@ class ScreenSearchResult extends Component {
             filter : -1,
             dataProduct : [],
             isNotFound : false,
-            isLoading : false
+            isLoading : false,
+            dataAddToCart : {},
+            isLoadInfoAddToCart : false,
+            isAddToCart : false,
         }
     }
 
@@ -52,14 +55,6 @@ class ScreenSearchResult extends Component {
                 isLoading : false 
             })
         }
-
-        // console.log('rs search ==  ',result)
-
-        // this.setState({ txtSearch })
-        // const { error, data } = await getProductNew()
-        // if(!error) {
-        //     this.setState({ dataProduct : data })
-        // }
     }
 
     __handleIsNotFound = () => {
@@ -86,6 +81,24 @@ class ScreenSearchResult extends Component {
         }else{
             this.setState({ isNotFound : true,  isLoading : false })
         }
+    }
+
+    _openModalAddToCart = async _id => {
+        this.setState({ isLoadInfoAddToCart : true })
+        const dataLoad = await getProductById(_id)
+        if(!dataLoad.error) {
+            this.setState({ 
+                isLoadInfoAddToCart : false,
+                dataAddToCart : dataLoad.data,
+                isAddToCart : true
+            })
+        }else{
+            this.setState({ isLoadInfoAddToCart : false })
+        }
+    }
+
+    _closeModalAddToCart = () => {
+        this.setState({ isAddToCart : false })
     }
 
     setSelectedLanguage = async itemValue => {
@@ -131,7 +144,6 @@ class ScreenSearchResult extends Component {
     }
 
     render() {
-
         const { isVisibleModalSearch, txtSearch, filter, dataProduct,
             isNotFound,
             isLoading } = this.state
@@ -155,13 +167,21 @@ class ScreenSearchResult extends Component {
             return  <ProductItem 
                         item={item} 
                         key={index} 
-                        goToDetails={this.props.navigation} 
+                        goToDetails={navigation} 
                         showModalAddToCart={() => this._openModalAddToCart(item._id)}
                     />
         }
 
         return(
             <View style={style.container}>
+
+                <ComponentLoading isLoading={this.state.isLoadInfoAddToCart} />
+
+                <ModalAddToCart 
+                      openModal={this.state.isAddToCart}
+                      closeModal={this._closeModalAddToCart}
+                      data={this.state.dataAddToCart}
+                  />
 
                 <ModalSearch 
                     isVisible={isVisibleModalSearch}
@@ -247,115 +267,9 @@ class ScreenSearchResult extends Component {
                                            }
                        </>
                     }
-                   
-                   
-                   
-                    {/* <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    >
-
-                    <View style={[style.wrapBody]}>
-                        <View style={style.wrap_product}>
-                            <ProductItem 
-                                item={productTest} 
-                                key={1} 
-                                goToDetails={navigation} 
-                            />
-                        </View>
-                        <View style={style.wrap_product}>
-                            <ProductItem 
-                                item={productTest} 
-                                key={1} 
-                                goToDetails={navigation} 
-                            />
-                        </View>
-                        <View style={style.wrap_product}>
-                            <ProductItem 
-                                item={productTest} 
-                                key={1} 
-                                goToDetails={navigation} 
-                            />
-                        </View>
-                        <View style={style.wrap_product}>
-                            <ProductItem 
-                                item={productTest} 
-                                key={1} 
-                                goToDetails={navigation} 
-                            />
-                        </View>
-                        <View style={style.wrap_product}>
-                            <ProductItem 
-                                item={productTest} 
-                                key={1} 
-                                goToDetails={navigation} 
-                            />
-                        </View>
-                        <View style={style.wrap_product}>
-                            <ProductItem 
-                                item={productTest} 
-                                key={1} 
-                                goToDetails={navigation} 
-                            />
-                        </View>
-                        <View style={style.wrap_product}>
-                            <ProductItem 
-                                item={productTest} 
-                                key={1} 
-                                goToDetails={navigation} 
-                            />
-                        </View>
-                        <View style={style.wrap_product}>
-                            <ProductItem 
-                                item={productTest} 
-                                key={1} 
-                                goToDetails={navigation} 
-                            />
-                        </View>
-                    </View>
-                </ScrollView>
-                 */}
-
-                {/* BODY CATEGORY */}
-                {/* {
-                isLoading ?   
-                    <View style={{flex : 1, justifyContent : 'center',alignItems : 'center' }}>
-                        <ActivityIndicator size="large" color={COLOR.MAIN_COLOR} />
-                    </View> :
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        >
-                        <View style  ={[style.wrapBody]}>
-                            {
-                                dataProduct.map((item, index) => 
-                                    <ProductItem 
-                                        item={item} 
-                                        key={index} 
-                                        goToDetails={this.props.navigation} 
-                                        showModalAddToCart={() => this._openModalAddToCart(item._id)}
-                                        />
-                                )
-                            }
-                        </View>
-                    </ScrollView>
-               } */}
             </View>
         )
     }
-}
-
-const productTest = {
-    createAt: "2021-05-11T16:18:39.391Z",
-    description: "- Mô tả tóm tắt đặc tính\r\n\r\n1.4GHz quad-core 8th-generation Intel Core i5 processor\r\nTurbo Boost up to 3.9GHz\r\nIntel Iris Plus Graphics 645\r\n8GB 2133MHz LPDDR3 memory\r\n256GB SSD storage¹\r\n13-inch Retina display with True Tone\r\nMagic Keyboard\r\nTouch Bar and Touch ID\r\nTwo Thunderbolt 3 ports",
-    modifyAt: "2021-05-11T16:18:39.391Z",
-    name: "Macbook Pro 13 inch 2020 Quad Core I5 1.4Ghz 8GB 256GB (MXK32, MXK62)",
-    parentCategory: "609b77cc51f089bd2142d4b4",
-    price: 29500000,
-    quantity: 100,
-    slug: "macbook-pro-13-inch-2020-quad-core-i5-14ghz-8gb-256gb-mxk32-mxk62",
-    subCategory: "609b789351f089bd2142d4b6",
-    thumbnail: "/upload/images/1620802168236-Macbook-MYD82.png",
-    __v: 0,
-    _id: "609b7a7851f089bd2142d4ba",
 }
 
 const style = StyleSheet.create({
