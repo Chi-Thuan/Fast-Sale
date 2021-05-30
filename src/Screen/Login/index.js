@@ -22,7 +22,7 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import { loginAccount } from '../../Services/api'
+import { loginAccount, registerGoogle } from '../../Services/api'
 import * as _font from '../../Constant/Font'
 import ModalOnlyOK from '../../Components/Modal/ModalOnlyOK/index'
 import ModalOnlyOkAction from '../../Components/Modal/ModalOnlyOkAction/index'
@@ -41,7 +41,9 @@ class Login extends Component {
             isDoneLogin : false,
             isLoading : false,
             isErrorEmail : false,
-            isDangPhatTrien : false
+            isDangPhatTrien : false,
+            isErrorLoginGoogle : false,
+            isDoneLoginGoogle : false,
         }
     }
 
@@ -103,13 +105,15 @@ class Login extends Component {
                 email : userInfo?.user?.email
             }
 
-            await AsyncStorage.setItem('userLogin', JSON.stringify(userLogin))
-            const check_conditionNavigate = this.props.route.params
-            if(check_conditionNavigate) {
-                const { conditionNavigate } = check_conditionNavigate
-                this.props.navigation.replace(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : conditionNavigate.screen })
+
+            const result = await registerGoogle(userLogin)
+
+            if(!result.error){
+                result.infoUser.type = 'google'
+                await AsyncStorage.setItem('userLogin', JSON.stringify(result.infoUser))
+                this.__handleShowIsDoneLoginGG()
             }else{
-                this.props.navigation.replace(ScreenKey.SCREEN_TAB_BOTTOM, { screen : ScreenKey.ACCOUNT })
+                this.__handleShowIsErrorLoginGG()
             }
 
           } catch (error) {
@@ -129,12 +133,31 @@ class Login extends Component {
           }
     }
 
+    __navigateDoneLoginGoogle = () => {
+        this.__handleShowIsDoneLoginGG()
+        const check_conditionNavigate = this.props.route.params
+        if(check_conditionNavigate) {
+            const { conditionNavigate } = check_conditionNavigate
+            this.props.navigation.replace(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : conditionNavigate.screen })
+        }else{
+            this.props.navigation.replace(ScreenKey.SCREEN_TAB_BOTTOM, { screen : ScreenKey.ACCOUNT })
+        }
+    }
+
     __handleShowPass = () => {
         this.setState({ isShowPass : !this.state.isShowPass })
     }
 
     __handleShowDangPhatTrien = () => {
         this.setState({ isDangPhatTrien : !this.state.isDangPhatTrien })
+    }
+
+    __handleShowIsErrorLoginGG = () => {
+        this.setState({ isErrorLoginGoogle : !this.state.isErrorLoginGoogle })
+    }
+
+    __handleShowIsDoneLoginGG = () => {
+        this.setState({ isDoneLoginGoogle : !this.state.isDoneLoginGoogle })
     }
 
     _openModalEmptyInput = () => {
@@ -201,10 +224,19 @@ class Login extends Component {
 
     render() {
 
-        const { isShowPass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading, isErrorEmail,isDangPhatTrien } = this.state
+        const { isShowPass, isEmptyInput, isModalWrongPass, isModalNotExist, isDoneLogin, isLoading, isErrorEmail,isDangPhatTrien,
+            isErrorLoginGoogle,
+            isDoneLoginGoogle } = this.state
 
         return(
             <>
+
+                <ModalOnlyOK 
+                    isVisible = {isErrorLoginGoogle}
+                    closeModal = { this.__handleShowIsErrorLoginGG }
+                    content="Hệ thống đang nâng cấp, vui lòng đăng nhập bằng hình thức khác!"
+                    icon={IMAGES.ICON_DANGPHATTRIEN}
+                />
 
                 <ModalOnlyOK 
                     isVisible = {isDangPhatTrien}
@@ -232,6 +264,15 @@ class Login extends Component {
                     closeModal = { this._openModalNotExistAccount }
                     content="Tài khoản không tồn tại!"
                     icon={IMAGES.LOGIN_ICON_EXIST}
+                />
+
+                {/* ĐĂNG NHẬP GOOGLE */}
+                <ModalOnlyOkAction 
+                    isVisible = {isDoneLoginGoogle}
+                    closeModal = { this.__navigateDoneLoginGoogle }
+                    content="Đăng nhập thành công"
+                    icon={IMAGES.LOGIN_ICON_DONE}
+                    chooseAccept={this.__navigateDoneLoginGoogle}
                 />
 
                 <ModalOnlyOkAction 

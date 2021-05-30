@@ -34,6 +34,10 @@ export const registerAccount = data => {
     return fetchApi('/api/user/auth/register', data, METHOD.POST)
 }
 
+export const registerGoogle = data => {
+    return fetchApi('/api/user/auth/register/google', data, METHOD.POST)
+}
+
 export const loginAccount = data => {
     return fetchApi('/api/user/auth/login', data, METHOD.POST)
 }
