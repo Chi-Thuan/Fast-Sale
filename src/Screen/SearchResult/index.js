@@ -6,11 +6,12 @@ import {
     StyleSheet, 
     TouchableOpacity, 
     ScrollView,
-    ActivityIndicator } from 'react-native'
+    ActivityIndicator,
+    FlatList } from 'react-native'
 import { _widthScale, _heightScale, BASE_URL, WIDTH_DIMENSION }  from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
 import * as ScreenKey from '../../Constant/ScreenKey'
-import { getProductBySubCategory, getInfoCategory, getProductById } from '../../Services/api'
+import { getProductBySubCategory, getInfoCategory, getProductById, getProductNew, search } from '../../Services/api'
 import Search from '../../Components/Category/Search/index'
 import ProductItem from '../../Components/Global/ProductItem/index'
 import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
@@ -18,6 +19,7 @@ import ComponentLoading from '../../Components/Loading/index'
 import IMAGES from '../../Constant/Images/index'
 import ModalSearch from '../../Components/Modal/ModalSearch/index'
 import {Picker} from '@react-native-picker/picker';
+import { SkypeIndicator } from 'react-native-indicators';
 import ButtonBack from '../../Components/Details/ButtonBack/index'
 
 class ScreenSearchResult extends Component {
@@ -27,13 +29,41 @@ class ScreenSearchResult extends Component {
         this.state={
             isVisibleModalSearch : false,
             txtSearch : '',
-            filter : -1
+            filter : -1,
+            dataProduct : [],
+            isNotFound : false,
+            isLoading : false
         }
     }
 
-    componentDidMount() {
-        const txtSearch = this.props.route.params.txtSearch || 'deoco '
-        this.setState({ txtSearch })
+    async componentDidMount() {
+        const txtSearch = this.props.route.params.txtSearch || 'search'
+        this.setState({ txtSearch, isLoading : true })
+        const result = await search(txtSearch)
+
+        if(!result.error) {
+            this.setState({ 
+                dataProduct : result.data,
+                isLoading : false
+            })
+        }else{
+            this.setState({ 
+                isNotFound : true,
+                isLoading : false 
+            })
+        }
+
+        // console.log('rs search ==  ',result)
+
+        // this.setState({ txtSearch })
+        // const { error, data } = await getProductNew()
+        // if(!error) {
+        //     this.setState({ dataProduct : data })
+        // }
+    }
+
+    __handleIsNotFound = () => {
+        this.setState({ isNotFound : !this.state.isNotFound })
     }
 
     __closeModalSearch = () => {
@@ -44,18 +74,91 @@ class ScreenSearchResult extends Component {
         this.setState({ isVisibleModalSearch : true })
     }
 
-    _reSearch = txtSearch_new => {
-        this.setState({ txtSearch : txtSearch_new })
+    _reSearch = async txtSearch_new => {
+        this.setState({ txtSearch : txtSearch_new,  isLoading : true })
+        const result = await search(txtSearch_new)
+        if(!result.error) {
+            this.setState({ 
+                dataProduct : result.data,
+                isNotFound : false ,
+                isLoading : false
+            })
+        }else{
+            this.setState({ isNotFound : true,  isLoading : false })
+        }
     }
 
-    setSelectedLanguage = itemValue => {
-        this.setState({ filter : itemValue })
+    setSelectedLanguage = async itemValue => {
+        this.setState({ filter : itemValue,isLoading : true })
+        /*
+        -1 : Mới nhất
+        0 : Cũ nhất
+        1 : Giá thấp đến cao,
+        2 : Giá cao đến thấp
+        */
+        let dataFilter = ''
+        switch (itemValue) {
+            case '-1':
+                    dataFilter = '?CreateAt=-1'
+                break;
+
+                case '0':
+                    dataFilter = '?CreateAt=1'
+                    break;
+        
+                case '1':
+                    dataFilter = '?price=1'
+                    break;
+
+                case '2':
+                    dataFilter = '?price=-1'
+                    break;
+            default:
+                break;
+        }
+        
+        const result = await search(this.state.txtSearch + dataFilter)
+
+        if(!result.error) {
+            this.setState({ 
+                dataProduct : result.data,
+                isNotFound : false ,
+                isLoading : false
+            })
+        }else{
+            this.setState({ isNotFound : true,  isLoading : false })
+        }
     }
 
     render() {
 
-        const { isVisibleModalSearch, txtSearch, filter } = this.state
+        const { isVisibleModalSearch, txtSearch, filter, dataProduct,
+            isNotFound,
+            isLoading } = this.state
         const { navigation } = this.props
+
+        const numColumns = 2
+        const fromData = (data, numColumns) => {
+            const numberOfFullRows = Math.floor(data.length/numColumns);
+            let numberOfElementLastRow = data.length - (numberOfFullRows * numColumns)
+            while(numberOfElementLastRow !== numColumns && numberOfElementLastRow !== 0) {
+                data.push({ key : `blank - ${numberOfElementLastRow}`, empty : true })
+                numberOfElementLastRow = numberOfElementLastRow + 1
+            }
+            return data
+        }
+
+        const _renderItem = ({ item, index }) => {
+            if(item.empty == true) {
+                return <View style={{width : _widthScale(300)}}/>
+            }
+            return  <ProductItem 
+                        item={item} 
+                        key={index} 
+                        goToDetails={this.props.navigation} 
+                        showModalAddToCart={() => this._openModalAddToCart(item._id)}
+                    />
+        }
 
         return(
             <View style={style.container}>
@@ -96,33 +199,58 @@ class ScreenSearchResult extends Component {
                     </View>
                 </View>
 
-                    {/* KHÔNG TÌM THẤY SẢN PHẨM */}
-                    {/* <View style={[style.wrap_txt_empty]}>
-                        <Text style={[style.txt_empty]}>
-                            Không tìm thấy sản phẩm phù hợp.
-                        </Text>
-                    </View> */}
-
-                    <View style={style.wrap_filter}>
-                        <Text>
-                            Sắp xếp theo
-                        </Text>
-                       <View>
-                            <Picker
-                                style={{ width : _widthScale(200) }}
-                                selectedValue={filter}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    this.setSelectedLanguage(itemValue)
-                                }
-                                >
-                                <Picker.Item label="Mới nhất" value="-1" />
-                                <Picker.Item label="Cũ nhất" value="0" />
-                                <Picker.Item label="Giá thấp đến cao" value="1" />
-                                <Picker.Item label="Giá cao đến thấp" value="2" />
-                            </Picker>
-                       </View>
-                    </View>
-                    <ScrollView
+                    {
+                        isLoading ?
+                        <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
+                        :
+                        <>
+                        {/* KHÔNG TÌM THẤY SẢN PHẨM */}
+                        { 
+                                               isNotFound ? 
+                                               <View style={[style.wrap_txt_empty]}>
+                                                   <Text style={[style.txt_empty]}>
+                                                       Không tìm thấy sản phẩm phù hợp.
+                                                   </Text>
+                                               </View>
+                                               :
+                                               <>
+                                                <View style={style.wrap_filter}>
+                                                   <Text>
+                                                       Sắp xếp theo
+                                                   </Text>
+                                               <View>
+                                                       <Picker
+                                                           style={{ width : _widthScale(200) }}
+                                                           selectedValue={filter}
+                                                           onValueChange={(itemValue, itemIndex) =>
+                                                               this.setSelectedLanguage(itemValue)
+                                                           }
+                                                           >
+                                                           <Picker.Item label="Mới nhất" value="-1" />
+                                                           <Picker.Item label="Cũ nhất" value="0" />
+                                                           <Picker.Item label="Giá thấp đến cao" value="1" />
+                                                           <Picker.Item label="Giá cao đến thấp" value="2" />
+                                                       </Picker>
+                                               </View>
+                                               </View>
+                                               <ScrollView showsVerticalScrollIndicator={false} >
+                                                   <View style={{width : '100%', paddingLeft : _widthScale(6)}}>
+                                                       <FlatList 
+                                                           showsVerticalScrollIndicator={false}
+                                                           numColumns={2}
+                                                           data={fromData(dataProduct, numColumns)}
+                                                           renderItem={_renderItem}
+                                                       />
+                                                   </View>
+                                               </ScrollView>
+                                               </>
+                                           }
+                       </>
+                    }
+                   
+                   
+                   
+                    {/* <ScrollView
                     showsVerticalScrollIndicator={false}
                     >
 
@@ -185,7 +313,8 @@ class ScreenSearchResult extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                
+                 */}
+
                 {/* BODY CATEGORY */}
                 {/* {
                 isLoading ?   

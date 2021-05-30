@@ -61,3 +61,7 @@ export const getListFavoriteProduct = () => {
 export const checkout = info => {
     return fetchApi('/api/user/checkout', info, METHOD.POST)
 }
+
+export const search = name => {
+    return fetchApi(`/api/user/search/${name}`, {} , METHOD.GET)
+}

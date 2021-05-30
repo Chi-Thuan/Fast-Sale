@@ -7,15 +7,14 @@ import {
     TouchableOpacity
 } from 'react-native'
 
-import { _widthScale, _heightScale, BASE_URL } from '../../Constant/Constants'
+import { _widthScale, _heightScale } from '../../Constant/Constants'
 import * as COLOR from '../../Constant/Color/index'
 import ButtonBack from '../../Components/Details/ButtonBack/index'
-import ButtonYeuThich from '../../Components/Cart/ButtonYeuThich/index'
 import BodyDetails from '../../Components/Details/BodyDetails/index'
-import { getProductById, checkIsLikeProduct } from '../../Services/api'
-import { formatCurrencyVND } from '../../Utils/utils'
+import { getProductById } from '../../Services/api'
 import * as _font from '../../Constant/Font'
 import LinearGradient from 'react-native-linear-gradient';
+import { SkypeIndicator } from 'react-native-indicators';
 
 class Details extends Component {
 
@@ -31,13 +30,8 @@ class Details extends Component {
     async componentDidMount () {
         const { _id } = this.props.route.params
         const { error, data } = await getProductById(_id)
-        // const infoLike = await checkIsLikeProduct(_id)  
         if(!error) {
             this.setState({ data : data, isLoading : false })
-            // if(!infoLike.error) {
-            //     console.log(infoLike)
-            //     this.setState({ isLike : true })
-            // }
         }else{
             console.log('Lỗi không lấy được chi tiết sp : ',error)
         }
@@ -51,7 +45,7 @@ class Details extends Component {
         return(
             isLoading ?   
             <View style={{flex : 1, justifyContent : 'center',alignItems : 'center',backgroundColor : COLOR.WHITE}}>
-                <ActivityIndicator size="large" color={COLOR.MAIN_COLOR} />
+                <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
             </View >
             :
             <View style={[style.container]}>

@@ -9,7 +9,8 @@ import { _heightScale, _widthScale } from '../../../Constant/Constants'
 import * as COLOR from '../../../Constant/Color/index'
 import * as ScreenKey from '../../../Constant/ScreenKey'
 import ProductItem from '../../../Components/Global/ProductItem/index'
-import { getProductNew } from '../../../Services/api'
+import { getProductNew } from '../../../Services/api';
+import { SkypeIndicator } from 'react-native-indicators';
 
 class ProductOffer extends Component {
 
@@ -39,7 +40,7 @@ class ProductOffer extends Component {
                 {
                     this.state.isLoading ?   
                     <View style={{flex : 1, justifyContent : 'center',alignItems : 'center' }}>
-                        <ActivityIndicator size="large" color={COLOR.MAIN_COLOR} />
+                         <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
                     </View>
                     : 
                     <View style={style.wrapItemTrending}>

@@ -73,7 +73,7 @@ class ButtonBack extends Component {
                     this._handleShowToast()
                     setTimeout(() => {
                         this._handleShowToast()
-                    }, 2000);
+                    }, 500);
                 })
             }else{
                 alert(result.message)
@@ -94,7 +94,7 @@ class ButtonBack extends Component {
                 this._handleShowToast()
                 setTimeout(() => {
                     this._handleShowToast()
-                }, 2500);
+                }, 500);
             })
         }else{
             alert(result.message)
