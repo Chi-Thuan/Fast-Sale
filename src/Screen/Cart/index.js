@@ -12,7 +12,8 @@ import ListCartItem from '../../Components/Cart/ListCartItem/index'
 import * as ScreenKey from '../../Constant/ScreenKey'
 import ModalAddToCart from '../../Components/Modal/ModalAddToCart/index'
 import ComponentLoading from '../../Components/Loading/index'
-import ModalMustLogin from '../../Components/Modal/ModalMustLogin/index'
+import ModalMustLogin from '../../Components/Modal/ModalMustLogin/index';
+import { SkypeIndicator } from 'react-native-indicators';
 
 class Cart extends Component {
 
@@ -25,10 +26,12 @@ class Cart extends Component {
             listCart : [],
             priceTotal : 0,
             isErrorLogin : false,
+            isLoading : false
         }
     }
 
     async componentDidMount() {
+        this.setState({ isLoading : true })
         const cart = await AsyncStorage.getItem('cart')
         if(cart != null) {
             const getCart = JSON.parse(cart)
@@ -38,8 +41,11 @@ class Cart extends Component {
             });
             this.setState({ 
                 listCart : getCart ,
-                priceTotal : totalTemp
+                priceTotal : totalTemp,
+                isLoading : false
             })
+        }else{
+            this.setState({ isLoading : false })
         }
     }
 
@@ -126,16 +132,6 @@ class Cart extends Component {
         const userLogin = await AsyncStorage.getItem('userLogin')
         if(!userLogin) {
             this.handleLogin_favorite()
-            // Alert.alert("Thông báo", "Bạn phải đăng nhập để sử dụng tính năng này!", [
-            //     { text : "Hủy" },
-            //     { text : 'Đăng nhập',  onPress : () => {
-            //         navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.LOGIN, params : {
-            //             conditionNavigate : {
-            //                 screen : ScreenKey.FAVORITE
-            //             }
-            //         }})  
-            //     }}
-            // ])
         }else{
             navigation.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, { screen : ScreenKey.FAVORITE })  
         }
@@ -143,58 +139,63 @@ class Cart extends Component {
 
     render() {
 
-        const { listCart, priceTotal } = this.state
+        const { listCart, priceTotal, isLoading } = this.state
         const { navigation } = this.props
 
         return(
-            <View style={style.container}>
-
-                <ModalMustLogin 
-                    isVisible={this.state.isErrorLogin} 
-                    closeModal={this.closePopupErrorLogin}
-                    actionAccept={this._handleNavigateLogin}
-                    /> 
-
-                <ModalMustLogin 
-                    isVisible={this.state.isErrorLogin_favorite} 
-                    closeModal={this.handleLogin_favorite}
-                    actionAccept={this._handleNavigate_favorite}
-                /> 
-
-                <ModalAddToCart 
-                    openModal={this.state.isAddToCart}
-                    closeModal={this._closeModalAddToCart}
-                    data={this.state.dataAddToCart}
-                />
-            
-                <ComponentLoading isLoading={this.state.isLoadInfoAddToCart} />
-
-                <View style={[style.wrapTitle]}>
-                    <Text style={style.title}>
-                            Giỏ hàng
-                    </Text>
-                    <ButtonYeuThich navigateFavorite={this.__navigateFavorite} />
-                </View>
-
+            <>
                 {
-                    listCart.length > 0 
-                    ?
-                    /* CÓ SẢN PHẨM */
-                    <ListCartItem totalPrice={priceTotal} updateCart={this._updateCart} data={listCart} navigation={navigation} navigateCheckout={this.__navigateCheckout} /> 
+                    isLoading ?
+                    <View style={style.container}>
+                        <SkypeIndicator size={_heightScale(40)} color={COLOR.MAIN_COLOR} />
+                    </View>
                     :
-                    /* KHÔNG CÓ SẢN PHẨM */
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        >
-                        <EmptyCart goHome={this.props.navigation} />
-                        <ProductOffer _openModalAddToCart={(_id) => this._openModalAddToCart(_id)} navigation={this.props.navigation} />
-                    </ScrollView>
-                }
-              
-               
+                    <View style={style.container}>
 
+                    <ModalMustLogin 
+                        isVisible={this.state.isErrorLogin} 
+                        closeModal={this.closePopupErrorLogin}
+                        actionAccept={this._handleNavigateLogin}
+                        /> 
+    
+                    <ModalMustLogin 
+                        isVisible={this.state.isErrorLogin_favorite} 
+                        closeModal={this.handleLogin_favorite}
+                        actionAccept={this._handleNavigate_favorite}
+                    /> 
+    
+                    <ModalAddToCart 
+                        openModal={this.state.isAddToCart}
+                        closeModal={this._closeModalAddToCart}
+                        data={this.state.dataAddToCart}
+                    />
                 
-            </View>
+                    <ComponentLoading isLoading={this.state.isLoadInfoAddToCart} />
+    
+                    <View style={[style.wrapTitle]}>
+                        <Text style={style.title}>
+                                Giỏ hàng
+                        </Text>
+                        <ButtonYeuThich navigateFavorite={this.__navigateFavorite} />
+                    </View>
+    
+                    {
+                        listCart.length > 0 
+                        ?
+                        /* CÓ SẢN PHẨM */
+                        <ListCartItem totalPrice={priceTotal} updateCart={this._updateCart} data={listCart} navigation={navigation} navigateCheckout={this.__navigateCheckout} /> 
+                        :
+                        /* KHÔNG CÓ SẢN PHẨM */
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            >
+                            <EmptyCart goHome={this.props.navigation} />
+                            <ProductOffer _openModalAddToCart={(_id) => this._openModalAddToCart(_id)} navigation={this.props.navigation} />
+                        </ScrollView>
+                    }
+                    </View>
+                }
+            </>
         )
     }
    
