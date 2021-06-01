@@ -29,7 +29,7 @@ class CartItem extends Component {
                     <View style={[style.wrapAvatar]}>
                         <Image
                             style={[style.avatar]}
-                            source={{ uri : BASE_URL + data.thumbnail }}
+                            source={{ uri : data.isThumbnailURL ? data.thumbnail : BASE_URL + data.thumbnail }}
                         />
                     </View>
                 </TouchableOpacity>

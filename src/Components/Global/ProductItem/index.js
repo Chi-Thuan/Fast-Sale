@@ -23,7 +23,7 @@ class ProductItem extends Component {
     render() {
 
         const { item, showModalAddToCart, goToDetails } = this.props
-
+        
         return (
             <TouchableWithoutFeedback
                 onPress={() => goToDetails.navigate(ScreenKey.SCREEN_NOT_TAB_BOTTOM, 
@@ -36,7 +36,7 @@ class ProductItem extends Component {
                     <View style={style.wrapAvatarCart}>
                         <Image
                             style={[style.avatarCart]}
-                            source={{ uri : BASE_URL + item.thumbnail }}
+                            source={{ uri : item.isThumbnailURL ? item.thumbnail : BASE_URL + item.thumbnail }}
                         />   
                     </View>
                     <View style={[style.wrapInfoCart]}>

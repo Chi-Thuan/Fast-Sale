@@ -76,7 +76,7 @@ class ButtonBack extends Component {
                     this._handleShowToast()
                     setTimeout(() => {
                         this._handleShowToast()
-                    }, 10);
+                    }, 500);
                 })
             }else{
                 alert(result.message)
@@ -97,7 +97,7 @@ class ButtonBack extends Component {
                 this._handleShowToast()
                 setTimeout(() => {
                     this._handleShowToast()
-                }, 10);
+                }, 500);
             })
         }else{
             alert(result.message)
@@ -138,7 +138,7 @@ class ButtonBack extends Component {
                         <View style={[style.wrapAvatar]}>
                             <Image 
                                 style={[style.avatar]}
-                                source={{ uri : BASE_URL +item.thumbnail }}
+                                source={{ uri : item.isThumbnailURL ? item.thumbnail : BASE_URL + item.thumbnail }}
                             />
                         </View>
                         {/* GIÁ */}
